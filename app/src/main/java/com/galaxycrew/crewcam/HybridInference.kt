@@ -14,6 +14,8 @@ import com.google.firebase.ai.type.PublicPreviewAPI
 import com.google.firebase.ai.type.content
 import com.google.firebase.ai.type.generationConfig
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import org.json.JSONObject
 
@@ -24,6 +26,7 @@ internal enum class Route(val title: String) {
 internal data class Frame(val bitmap: Bitmap, val timestamp: Long, val origin: String)
 
 internal data class Reading(val grounding: GroundedFraming, val receipt: JSONObject)
+internal data class LocatedReference(val reference: AppearanceReference, val match: MatchPoint)
 
 @OptIn(PublicPreviewAPI::class)
 internal class HybridInference(private val log: (JSONObject) -> Unit) {
@@ -95,20 +98,33 @@ internal class HybridInference(private val log: (JSONObject) -> Unit) {
     private class InvalidLocalReply(val request: String, cause: LocalOutputFailure) : Exception(cause)
 
     suspend fun observe(run: String, round: String, camera: String, subject: String, frame: Frame,
-                        route: Route, stableProbe: Boolean = false): Reading {
+                        route: Route, stableProbe: Boolean = false, reference: AppearanceReference? = null,
+                        projectedReference: LocatedReference? = null): Reading {
         require(subject.isNotBlank() && subject.length <= 80)
         require(!stableProbe || (route == Route.HYBRID && frame.origin == "generated sample"))
-        try { return request(run, round, camera, subject, frame, route, stableProbe, null) }
+        require(projectedReference==null || reference==null && frame.origin=="video rehearsal" &&
+            projectedReference.reference.subject==subject && frame.timestamp>projectedReference.reference.sensor)
+        val located = projectedReference ?: reference?.let {
+            require(it.subject == subject && frame.timestamp > it.sensor)
+            val match = withContext(Dispatchers.Default) { it.locate(referencePixels(frame.bitmap)) }
+            if (match == null) {
+                log(JSONObject().put("event","reference_lost").put("run",run).put("round",round)
+                    .put("camera",camera).put("selection_frame",it.sensor).put("frame",frame.timestamp))
+                throw ReferenceLost()
+            }
+            LocatedReference(it,match)
+        }
+        try { return request(run, round, camera, subject, frame, route, stableProbe, null, located) }
         catch (invalid: InvalidLocalReply) {
             if (stableProbe) throw requireNotNull(invalid.cause)
             val retryRoute = if (route == Route.HYBRID) Route.CLOUD else Route.PRIVATE
-            try { return request(run, round, camera, subject, frame, retryRoute, false, invalid.request) }
+            try { return request(run, round, camera, subject, frame, retryRoute, false, invalid.request, located) }
             catch (again: InvalidLocalReply) { throw requireNotNull(again.cause) }
         }
     }
 
     private suspend fun request(run: String, round: String, camera: String, subject: String, frame: Frame,
-                                route: Route, stableProbe: Boolean, retryOf: String?): Reading {
+                                route: Route, stableProbe: Boolean, retryOf: String?, located: LocatedReference?): Reading {
         val started = SystemClock.elapsedRealtime()
         val receipt = JSONObject().put("event", "inference").put("run", run).put("round", round)
             .put("request", java.util.UUID.randomUUID().toString()).put("camera", camera)
@@ -116,6 +132,12 @@ internal class HybridInference(private val log: (JSONObject) -> Unit) {
             .put("mode", when (route) { Route.PRIVATE -> "ONLY_ON_DEVICE"; Route.HYBRID -> "PREFER_ON_DEVICE"; Route.CLOUD -> "ONLY_IN_CLOUD" })
             .put("source", JSONObject.NULL).put("cloud_model_config", CLOUD_MODEL)
         try {
+            located?.let {
+                receipt.put("selection_frame",it.reference.sensor).put("selection_method",it.reference.method)
+                    .put("reference_match_error",it.match.difference).put("image_width",frame.bitmap.width)
+                    .put("image_height",frame.bitmap.height).put("reference_x",(it.match.region.x*1000).toInt())
+                    .put("reference_y",(it.match.region.y*1000).toInt())
+            }
             if (retryOf != null) receipt.put("retry_of", retryOf).put("retry_reason", "invalid_local_output")
             val local = when { stableProbe -> inspect(OnDeviceModelOption.STABLE); route != Route.CLOUD -> preferredModel(); else -> null }
             receipt.put("local_category", local?.option?.toString() ?: JSONObject.NULL)
@@ -123,7 +145,7 @@ internal class HybridInference(private val log: (JSONObject) -> Unit) {
             val ai = model(route, local?.option ?: OnDeviceModelOption.STABLE)
             val prompt = content {
                 image(frame.bitmap)
-                text(FrameGroundingContract.prompt(subject, retryOf != null))
+                text(FrameGroundingContract.prompt(subject, retryOf != null, located?.match?.region))
             }
             val sdkStart = SystemClock.elapsedRealtime()
             val response = ai.generateContent(prompt)
@@ -146,7 +168,7 @@ internal class HybridInference(private val log: (JSONObject) -> Unit) {
             val raw = response.text.orEmpty().trim()
             if (frame.origin == "generated sample") receipt.put("sample_response", raw.take(1600))
             val text = fencedJson.matchEntire(raw)?.groupValues?.get(1) ?: raw
-            val grounding = try { FrameGroundingContract.parse(text) }
+            val grounding = try { FrameGroundingContract.parse(text, located?.match?.region) }
                 catch (e: LocalOutputFailure) {
                     if (source == "ON_DEVICE") throw InvalidLocalReply(receipt.getString("request"), e)
                     throw e

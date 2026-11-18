@@ -1,6 +1,9 @@
 package com.galaxycrew.crewcam
 
+internal class ReferenceLost : Exception()
+
 internal fun checkError(error: Exception): String = when (error.javaClass.simpleName) {
+    "ReferenceLost" -> "The selected detail could not be matched in the new frame. Choose a clearer detail in a new photo."
     "FirebaseAIOnDeviceNotAvailableException" ->
         "The local model is unavailable. Open Sample checks to prepare it, or allow cloud fallback for a staged subject."
     "FirebaseAIOnDeviceDownloadRequiredException" ->

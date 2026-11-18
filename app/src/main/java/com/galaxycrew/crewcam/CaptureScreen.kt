@@ -19,10 +19,19 @@ internal class CaptureScreen(val context: Context) {
     private val body = LinearLayout(context)
     val preview = PreviewView(context)
     val team = button("Crew setup")
+    val rehearsal = button("Try the rehearsal")
+    val enableCamera = button("Enable camera", true)
     val route = button("On this phone")
     val sample = button("Sample checks")
     val zoomOut = button("− Zoom"); val zoomIn = button("+ Zoom")
     val check = button("Check my frame", true)
+    val pick = button("Select in photo")
+    val clear = button("Clear selection")
+    val share = button("Crew photos")
+    val details = button("Check details")
+    val stepBack = CheckBox(context).apply { text="I have space to step back"; textSize=15f }
+    val board = CameraBoard(context)
+    val reference = label("", 14, accent)
     val decline = button("Decline")
     val record = button("Record original")
     val play = button("Play last original")
@@ -52,10 +61,11 @@ internal class CaptureScreen(val context: Context) {
             } else false
         }
         val bar = LinearLayout(context).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(16), dp(3), dp(12), dp(3)) }
-        bar.addView(title, LinearLayout.LayoutParams(0, -2, 1f)); bar.addView(team)
+        bar.addView(title, LinearLayout.LayoutParams(0, -2, 1f)); bar.addView(rehearsal); bar.addView(team)
         root.addView(bar); root.addView(body, LinearLayout.LayoutParams(-1, 0, 1f))
         body.addView(stage); body.addView(controls)
         stage.addView(preview, FrameLayout.LayoutParams(-1, -1))
+        stage.addView(enableCamera, FrameLayout.LayoutParams(-2,-2,Gravity.CENTER))
         frameLabel.setPadding(dp(9), dp(4), dp(9), dp(4)); frameLabel.background = shape(0xb51a292a.toInt())
         stage.addView(frameLabel, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.START).apply { setMargins(dp(10), dp(10), 0, 0) })
         val zoom = row(zoomOut, zoomIn)
@@ -63,8 +73,10 @@ internal class CaptureScreen(val context: Context) {
         val options = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(15), dp(9), dp(15), dp(16)) }
         controls.addView(options)
         options.addView(label("Subject in view", 13, accent, true)); options.addView(subject)
+        options.addView(row(pick,clear)); options.addView(reference)
         options.addView(message); options.addView(receipt); options.addView(totals)
         options.addView(check); options.addView(decline); options.addView(row(record, play)); options.addView(row(route, sample))
+        options.addView(row(share,details)); options.addView(stepBack); options.addView(board)
         play.visibility = View.GONE; decline.visibility = View.GONE
         arrange()
         if (android.os.Build.VERSION.SDK_INT >= 30) root.setOnApplyWindowInsetsListener { view, insets ->

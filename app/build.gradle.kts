@@ -15,8 +15,9 @@ android {
         applicationId = "com.galaxycrew.crewcam.hybrid"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1-hybrid"
+        versionCode = 2
+        versionName = "0.2-hybrid"
+        testInstrumentationRunner = "com.galaxycrew.crewcam.CrewUiChecks"
     }
     buildFeatures { buildConfig = true }
     compileOptions {
@@ -34,6 +35,7 @@ dependencies {
     implementation("androidx.camera:camera-view:1.4.2")
     implementation("androidx.camera:camera-video:1.4.2")
     implementation("com.google.android.gms:play-services-nearby:19.3.0")
+    implementation("com.google.mlkit:object-detection:17.0.2")
     implementation("com.google.guava:guava:31.0.1-android")
     implementation("com.google.firebase:firebase-ai:18.2.0")
     implementation("com.google.firebase:firebase-ai-ondevice:16.0.0-beta08")

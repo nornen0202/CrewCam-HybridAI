@@ -22,6 +22,7 @@ internal class TeamRound(size: Int, val subject: String, val run: String = UUID.
     var round = UUID.randomUUID().toString()
         private set
     private val initial = linkedMapOf<String, CameraView>()
+    fun initialView(camera: String): CameraView? = initial[camera]
     val views = linkedMapOf<String, CameraView>()
     var choices = emptyList<CoverageAllocator.Choice>()
         private set

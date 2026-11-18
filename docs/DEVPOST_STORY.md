@@ -6,7 +6,9 @@ Two relatives can both point a phone at the birthday cake. When the candles go o
 
 ## What CrewCam does
 
-Each operator checks the framing on their own phone. The lead receives observations over Nearby and suggests who should hold, widen or move closer. Each operator can accept or decline. After everyone marks ready, the lead asks for a fresh frame from every camera. CrewCam can verify the plan only when those later observations match the assigned views. Each phone saves its own original recording.
+Each operator checks the framing on their own phone. The lead receives observations over Nearby and suggests who should hold, widen or move closer. Each operator can accept or decline. After everyone marks ready, the lead asks for a fresh frame from every camera. CrewCam verifies the plan when those later observations match the assigned views. Each phone saves its own original recording.
+
+In version 0.2, a camera operator can freeze a photo and tap or drag around a detail to identify the subject. The app searches for that detail again in a later full camera frame. The model's box must agree with it. A paired camera can separately opt to send a small check photo to the lead phone. The lead can then see which view belongs to each instruction.
 
 ## How I built it
 
@@ -19,6 +21,8 @@ I started the Firebase entry on November 17, 2026. An earlier CrewCam prototype 
 On one Galaxy S25 Ultra, I turned off Wi-Fi and mobile data. Gemini Nano 4 Fast classified a generated wide shot in 11.959 seconds with no active default network. With connectivity restored, I selected an unavailable stable model in local-first mode. Firebase automatically returned a cloud result from the same input.
 
 The rear camera also checked a real plastic bottle on the phone in 14.153 seconds. CrewCam reported a medium view. Its same-run original saved and decoded through all 206 frames. When I asked for a violet umbrella that was absent from the scene, the phone reported the subject missing. A fresh install of the signed release passed Play Integrity, local inference, cloud inference and automatic fallback.
+
+I tested the same role policy on one S25 Ultra with two virtual views of a generated first-birthday video. Both views started on the same source frame. Keeping both wide prompted a retry on the later frame. When I applied the suggested crop to B, real on-device requests measured A as wide and B as medium on that same later frame. Both views then played side by side from one decoder. The source, crop and per-request records make the comparison reproducible.
 
 ## What I learned
 

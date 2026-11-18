@@ -14,6 +14,7 @@ internal class WirelessPeers(val camera: String, val size: Int) {
     val info get() = "CrewCamHybrid:$camera:$size"
     val complete get() = connected.values.toSet() == expected
     val count get() = connected.size
+    val online get() = connected.values.toSet()
     fun cameraFor(endpoint: String): String? = connected[endpoint] ?: pending[endpoint]
     fun reserve(endpoint: String, info: String): Boolean {
         val parts = info.split(':')

@@ -13,6 +13,7 @@ internal class NearbyStarTransport(
     private val camera: String,
     private val crewSize: Int,
     private val connection: (Boolean) -> Unit,
+    private val connectedCameras: (Set<String>) -> Unit,
     private val message: (String) -> Unit,
     private val status: (String) -> Unit,
     private val authenticate: (String, String, String) -> Unit,
@@ -35,10 +36,11 @@ internal class NearbyStarTransport(
         previous?.peers?.clear()
         client.stopAdvertising(); client.stopDiscovery(); client.stopAllEndpoints()
         clearAuthentication(null)
+        connectedCameras(emptySet())
         connection(false)
     }
     override fun send(message: String): Boolean = current?.send(message) == true
-    fun confirm(endpoint: String, accepted: Boolean) { current?.confirm(endpoint, accepted) }
+    override fun confirm(endpoint: String, accepted: Boolean) { current?.confirm(endpoint, accepted) }
 
     private inner class Run {
         val peers = WirelessPeers(camera, crewSize)
@@ -88,6 +90,7 @@ internal class NearbyStarTransport(
             return true
         }
         private fun changed() {
+            connectedCameras(peers.online)
             val complete = peers.complete
             if (complete != ready) { ready = complete; connection(complete) }
             status("Nearby · ${peers.count} / ${if (camera == "A") crewSize - 1 else 1} peers connected")
@@ -155,5 +158,5 @@ internal class NearbyStarTransport(
             }
         }
     }
-    private companion object { const val SERVICE = "com.galaxycrew.crewcam.hybrid.star.v1" }
+    private companion object { const val SERVICE = "com.galaxycrew.crewcam.hybrid.star.v2" }
 }

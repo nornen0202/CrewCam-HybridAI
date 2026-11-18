@@ -4,6 +4,7 @@
 **/build/
 .private/
 delivery/
+app/src/main/assets/rehearsal/first-birthday.mp4
 local.properties
 **/google-services.json
 **/*.keystore

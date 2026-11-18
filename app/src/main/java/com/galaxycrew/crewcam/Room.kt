@@ -1,12 +1,13 @@
 package com.galaxycrew.crewcam
 
-import android.content.Context
 import crewcam.core.CrewTopology
 import org.json.JSONObject
 import java.util.UUID
 
-internal class Room(private val context: Context, private val event: (JSONObject) -> Unit,
+internal class Room(private val makeLink: (String,Int,CrewLinkCallbacks) -> CrewTransport, private val event: (JSONObject) -> Unit,
                     private val changed: () -> Unit, private val cancelCheck: () -> Unit,
+                    private val clearSelection: () -> Unit,
+                    private val transportLabel: String = "Nearby STAR",
                     private val authenticate: (String, String, (Boolean) -> Unit) -> Unit) {
     var camera = "A"; private set
     var size = 1; private set
@@ -21,7 +22,18 @@ internal class Room(private val context: Context, private val event: (JSONObject
     var done = false; private set
     var leader: TeamRound? = null; private set
     val originals = mutableSetOf<String>()
-    private var link: NearbyStarTransport? = null
+    val shots = mutableMapOf<String,CheckedShot>()
+    var online = emptySet<String>(); private set
+    var sharePhotos = false; private set
+    var lastChoice: CoverageAllocator.Choice? = null; private set
+    var lastVerdict: Boolean? = null; private set
+    var selfAccepted = false; private set
+    var selfReady = false; private set
+    val freshRequest get() = receivedFresh
+    private var singleCheck = false
+    private val hiddenPhotos = mutableSetOf<String>()
+    private val pastRuns = ArrayDeque<String>()
+    private var link: CrewTransport? = null
     private var pendingAuth: String? = null
     private var receivedFresh = false
     private var cancelled = false
@@ -31,19 +43,21 @@ internal class Room(private val context: Context, private val event: (JSONObject
         link = null
         require(count == 1 && name == "A" || count in 2..CrewTopology.MAX_CAMERAS && name in CrewTopology.names(count))
         size = count; camera = name
+        connected = false; online = emptySet(); sharePhotos = false; clearSelection()
         reset()
         note = if (size == 1) "Checking this phone." else "Waiting for nearby cameras."
         if (size > 1) {
-            val transport = NearbyStarTransport(context, camera, size,
+            val transport = makeLink(camera, size, CrewLinkCallbacks(
                 connection = { ready ->
                     connected = ready
-                    if (!ready) reset()
+                    if (!ready || singleCheck) { reset(); clearSelection() }
+                    if (!ready) sharePhotos = false
                     changed()
-                }, message = ::receive, status = { note = it; changed() },
+                }, connectedCameras = { online = it; changed() }, message = ::receive, status = { note = it; changed() },
                 authenticate = { endpoint, peer, digits ->
                     pendingAuth = endpoint
                     authenticate(peer, digits) { yes -> if (pendingAuth == endpoint) link?.confirm(endpoint, yes) }
-                }, clearAuthentication = { endpoint -> if (endpoint == null || endpoint == pendingAuth) pendingAuth = null })
+                }, clearAuthentication = { endpoint -> if (endpoint == null || endpoint == pendingAuth) pendingAuth = null }))
             link = transport
             transport.start(name == "A")
         }
@@ -51,16 +65,21 @@ internal class Room(private val context: Context, private val event: (JSONObject
     }
 
     private fun reset() {
+        if (pastRuns.size>=24) pastRuns.removeFirst()
+        pastRuns.addLast(run)
         cancelCheck(); leader = null; clearAssignment()
+        shots.clear(); hiddenPhotos.clear(); lastChoice = null; lastVerdict = null
+        selfAccepted=false; selfReady=false; singleCheck=false; subject=""
         run = uuid(); round = ""; needsFrame = false; originals.clear(); receivedFresh = false; cancelled = false
     }
     private fun clearAssignment() { offer = null; accepted = false; done = false }
 
     fun begin(target: String) {
-        require(camera == "A" && (size == 1 || connected))
+        require(camera == "A")
         reset()
         subject = target.trim().also { require(it.isNotEmpty() && it.length <= 80) }
-        if (size == 1) {
+        singleCheck = size==1 || !connected
+        if (singleCheck) {
             round = uuid(); needsFrame = true; note = "Checking your view."
         } else {
             leader = TeamRound(size, subject, run)
@@ -74,24 +93,30 @@ internal class Room(private val context: Context, private val event: (JSONObject
     }
 
     private fun askFrames(fresh: Boolean) {
+        shots.clear(); hiddenPhotos.clear()
         round = leader!!.round; needsFrame = true; receivedFresh = fresh
         note = if (fresh) "Checking a new frame after the crew marked ready." else "Each camera must confirm the subject."
         event(base("check", "*").put("fresh", fresh).put("subject", subject))
         transmit(base("check", "*").put("fresh", fresh).put("subject", subject))
     }
 
-    fun submitFrame(view: CameraView) {
+    fun submitFrame(shot: CheckedShot) {
         if (!needsFrame || cancelled) return
         needsFrame = false
+        val view=shot.view
         val data = base("view", "A").put("frame", view.frame).put("framing", view.framing)
+            .put("checked_at",shot.checkedAt)
             .put("source", view.source).put("latency_ms", view.latencyMs)
             .put("tighten", view.tighten).put("widen", view.widen)
         view.issue?.let { data.put("issue", it.name) }
-        event(data)
-        if (size == 1) {
+        event(JSONObject(data.toString()))
+        shots[camera]=shot
+        if (singleCheck) {
             note = if (view.framing == "UNCERTAIN") view.issue?.guidance ?: "Reframe the subject and check again."
-                else "Your view is " + view.framing.lowercase() + "."
+                else "Your view is " + view.framing.lowercase() + "." + if (size>1) " Waiting for the other cameras." else ""
         } else if (camera == "A") readView(camera, data) else {
+            if (sharePhotos && connected && shot.photo!=null)
+                CrewPhoto.encode(shot.photo)?.let { data.put("photo",it) }
             note = "View sent. Waiting for the crew."; transmit(data)
         }
         changed()
@@ -103,10 +128,14 @@ internal class Room(private val context: Context, private val event: (JSONObject
             data.getBoolean("widen"), data.getString("source"), data.getLong("latency_ms"),
             data.optString("issue").takeIf { it.isNotEmpty() }?.let(FramingIssue::valueOf))
         if (!team.observe(round, sender, view)) return
+        if (sender!=camera) {
+            val photo=if (sender in hiddenPhotos) null else CrewPhoto.decode(data.optString("photo"))
+            shots[sender]=CheckedShot(view,data.optLong("checked_at"),photo)
+        }
         note = team.message
         when (team.phase) {
             Phase.ASSIGNED -> team.choices.forEach { choice ->
-                if (choice.camera == "A") offer = choice
+                if (choice.camera == "A") { offer = choice; lastChoice = choice }
                 else transmit(base("offer", choice.camera).put("target", choice.framing).put("action", choice.adjustment).put("backup", choice.backup))
                 event(base("assignment", choice.camera).put("target", choice.framing).put("action", choice.adjustment))
             }
@@ -116,12 +145,12 @@ internal class Room(private val context: Context, private val event: (JSONObject
     }
     fun accept() {
         if (offer == null || accepted || cancelled) return
-        accepted = true; note = "Follow the framing cue. Mark ready when the shot is set."
+        accepted = true; selfAccepted=true; note = "Follow the framing cue. Mark ready when the shot is set."
         signal("accept"); changed()
     }
     fun ready() {
         if (!accepted || done || cancelled) return
-        done = true; note = "Ready for a fresh check."
+        done = true; selfReady=true; note = "Ready for a fresh check."
         signal("ready"); changed()
     }
     fun failure(reason: String) {
@@ -147,8 +176,15 @@ internal class Room(private val context: Context, private val event: (JSONObject
         }
     }
     private fun verdict(team: TeamRound) {
+        lastVerdict=team.phase==Phase.VERIFIED
         val value = base("verdict", "*").put("verified", team.phase == Phase.VERIFIED).put("message", team.message)
         event(value); transmit(value); cancelled = true; clearAssignment(); needsFrame = false; note = team.message
+    }
+    fun setPhotoSharing(enabled:Boolean) {
+        sharePhotos=enabled
+        if (!enabled && connected && camera!="A" && round.isNotEmpty())
+            transmit(base("hide_photo","A"))
+        changed()
     }
     fun saved(original: Original) {
         val data = base("original", "A").put("run", original.run).put("file", original.name)
@@ -172,32 +208,34 @@ internal class Room(private val context: Context, private val event: (JSONObject
                 UUID.fromString(incomingRound)
                 val fresh = data.getBoolean("fresh")
                 if (fresh && (run != incomingRun || !done || cancelled || receivedFresh)) return
-                if (!fresh && run == incomingRun || round == incomingRound) return
-                if (!fresh) { reset(); clearAssignment() } else cancelCheck()
+                if (!fresh && (run == incomingRun || incomingRun in pastRuns) || round == incomingRound) return
+                if (!fresh) { reset(); clearSelection() } else { cancelCheck(); shots.clear(); hiddenPhotos.clear() }
                 receivedFresh = fresh; run = incomingRun; round = incomingRound; subject = target
                 needsFrame = true; note = "Confirm you see " + target + ", then check this camera."
             } else {
                 if (incomingRun != run || (kind != "original" && incomingRound != round)) return
                 if (camera == "A") when (kind) {
                     "view" -> readView(sender, data)
+                    "hide_photo" -> { hiddenPhotos.add(sender); shots[sender]?.let { shots[sender]=it.copy(photo=null) } }
                     "accept", "ready", "decline" -> handleSignal(kind, sender)
                     "original" -> if (data.getLong("duration_ms") > 0 && data.getLong("bytes") > 0) originals.add(sender)
                 } else if (sender == "A") when (kind) {
                     "offer" -> if (!cancelled && offer == null && !needsFrame) {
                         val choice = CoverageAllocator.Choice(camera, data.getString("target"), data.getString("action"), data.getBoolean("backup"))
                         require(choice.framing in setOf("WIDE", "MEDIUM", "CLOSE") && choice.adjustment in setOf("HOLD", "WIDEN_CURRENT", "TIGHTEN_CURRENT"))
-                        offer = choice; note = "The crew has a framing suggestion."
+                        offer = choice; lastChoice=choice; note = "The crew has a framing suggestion."
                     }
-                    "verdict" -> { cancelCheck(); cancelled = true; needsFrame = false; clearAssignment(); note = data.getString("message").take(200) }
+                    "verdict" -> { cancelCheck(); lastVerdict=data.getBoolean("verified"); cancelled = true; needsFrame = false; clearAssignment(); note = data.getString("message").take(200) }
                 }
             }
-            event(JSONObject(data.toString()).put("direction", "received")); changed()
+            data.remove("photo")
+            event(data.put("direction", "received")); changed()
         }.onFailure { note = "A crew message could not be read."; changed() }
     }
 
     private fun base(kind: String, to: String) = JSONObject().put("event", kind).put("kind", kind)
         .put("version", CrewWire.VERSION).put("sender", camera).put("to", to)
-        .put("run", run).put("round", round).put("transport", if (size > 1) "Nearby STAR" else "single phone")
+        .put("run", run).put("round", round).put("transport", if (size > 1) transportLabel else "single phone")
     private fun transmit(data: JSONObject) { if (link?.send(data.toString()) != true) note = "Delivery failed. Reconnect the crew and start a new check." }
     fun close() { link?.close(); link = null }
     private fun uuid() = UUID.randomUUID().toString()

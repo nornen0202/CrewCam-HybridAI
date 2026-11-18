@@ -13,6 +13,7 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import crewcam.core.CrewTopology
 import kotlinx.coroutines.CancellationException
@@ -33,17 +34,24 @@ class MainActivity : ComponentActivity() {
     private var savedFile = ""
     private var pendingCrew: Pair<Int, String>? = null
     private var pairing: AlertDialog? = null
+    private var picker: PhotoPicker? = null
+    private var selection: AppearanceReference? = null
+    private var picking: Job? = null
+    private var details = ""
+    private var needsNewReference = false
+    private var displayOrientation = Configuration.ORIENTATION_UNDEFINED
     private val permissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         val pending = pendingCrew
         pendingCrew = null
         if (pending != null && nearbyPermissions().all(::granted)) room.configure(pending.first, pending.second)
         else if (pending != null) ui.message.text = "Nearby access is needed to connect two cameras."
-        else if (granted(Manifest.permission.CAMERA)) camera.bind()
+        else if (granted(Manifest.permission.CAMERA)) { camera.bind(); render() }
         else ui.message.text = "Allow camera access to check a live frame. Sample checks also work."
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        displayOrientation=resources.configuration.orientation
         if (BuildConfig.DEBUG && intent.hasExtra("sample_check")) {
             startActivity(Intent(this, SampleActivity::class.java).putExtra("sample_check", intent.getIntExtra("sample_check", -1)))
             finish(); return
@@ -53,7 +61,9 @@ class MainActivity : ComponentActivity() {
         setContentView(ui.root)
         val journal = RunJournal(this)
         inference = HybridInference(journal::append)
-        room = Room(this, journal::append, ::render, { work?.cancel(); work = null; receipt = "" }) { peer, digits, reply ->
+        room = Room({ id,count,h -> NearbyStarTransport(this,id,count,h.connection,h.connectedCameras,h.message,h.status,h.authenticate,h.clearAuthentication) },
+            journal::append, ::render, { work?.cancel(); work = null; receipt = ""; details = "" },
+            { resetSelection(); ui.stepBack.isChecked=false }) { peer, digits, reply ->
             pairing?.dismiss()
             pairing = AlertDialog.Builder(this).setTitle("Pair with camera " + peer + "?")
                 .setMessage("Confirm that both phones show " + digits + ".")
@@ -66,10 +76,24 @@ class MainActivity : ComponentActivity() {
             render()
         }
         ui.team.setOnClickListener { chooseCrew() }
+        ui.rehearsal.setOnClickListener { startActivity(Intent(this,RehearsalActivity::class.java)) }
+        ui.enableCamera.setOnClickListener { permissions.launch(arrayOf(Manifest.permission.CAMERA)) }
         ui.route.setOnClickListener { chooseRoute() }
         ui.sample.setOnClickListener { startActivity(Intent(this, SampleActivity::class.java)) }
         ui.zoomIn.setOnClickListener { camera.zoom(1.35f) }
         ui.zoomOut.setOnClickListener { camera.zoom(1 / 1.35f) }
+        ui.pick.setOnClickListener { selectPhoto() }
+        ui.subject.doAfterTextChanged { text ->
+            if(room.camera=="A" && selection!=null && selection?.subject!=text.toString().trim()) { resetSelection(); render() }
+        }
+        ui.clear.setOnClickListener { resetSelection(); render() }
+        ui.share.setOnClickListener { choosePhotoSharing() }
+        ui.details.setOnClickListener {
+            val rows=room.shots.map { (id,s) -> "Camera "+id+" · sensor "+s.view.frame+" · "+s.view.source }
+            AlertDialog.Builder(this).setTitle("Check details")
+                .setMessage((listOf("Run "+room.run,"Round "+room.round)+rows+details).filter{it.isNotBlank()}.joinToString("\n"))
+                .setPositiveButton("Close",null).show()
+        }
         ui.decline.setOnClickListener { room.failure("This camera stopped the framing check. Start a new check when the crew is ready.") }
         ui.check.setOnClickListener { action() }
         ui.record.setOnClickListener {
@@ -82,13 +106,21 @@ class MainActivity : ComponentActivity() {
         } }
         render()
         if (granted(Manifest.permission.CAMERA)) camera.bind()
-        else permissions.launch(arrayOf(Manifest.permission.CAMERA))
     }
 
     private fun action() {
-        if (work?.isActive == true) return
+        if (work?.isActive == true || needsNewReference) return
         if (!granted(Manifest.permission.CAMERA)) { permissions.launch(arrayOf(Manifest.permission.CAMERA)); return }
-        if (room.needsFrame) { observe(); return }
+        if (room.needsFrame) {
+            if (room.camera=="A") observe() else {
+                AlertDialog.Builder(this).setTitle("Confirm on camera "+room.camera)
+                    .setMessage("Is "+room.subject+" visible in this camera’s own view?")
+                    .setPositiveButton("I see it · check") { _,_ -> observe() }
+                    .setNeutralButton("Select in photo") { _,_ -> selectPhoto() }
+                    .setNegativeButton("Cancel",null).show()
+            }
+            return
+        }
         if (room.offer != null && !room.accepted) { room.accept(); return }
         if (room.accepted && !room.done) { room.ready(); return }
         if (room.leader?.let { it.phase == Phase.ASSIGNED && it.done == it.cameras.toSet() } == true) {
@@ -104,21 +136,27 @@ class MainActivity : ComponentActivity() {
     private fun observe() {
         val run = room.run; val round = room.round; val target = room.subject
         val cameraName = room.camera; val policy = route
+        val ref=selection?.takeIf { it.subject==target }
         work = lifecycleScope.launch {
             try {
                 ui.check.isEnabled = false; ui.route.isEnabled = false
                 ui.message.text = "Checking a fresh camera frame…"
                 val frame = camera.nextFrame()
+                val checkedAt=System.currentTimeMillis()
+                val thumb=CrewPhoto.thumbnail(frame.bitmap)
                 val reading = try {
-                    withTimeout(110_000) { inference.observe(run, round, cameraName, target, frame, policy) }
+                    withTimeout(110_000) { inference.observe(run, round, cameraName, target, frame, policy, reference=ref) }
                 } finally { frame.bitmap.recycle() }
                 if (room.run != run || room.round != round || !room.needsFrame) return@launch
                 val data = reading.receipt
                 val model = if (data.getString("source") == "ON_DEVICE") data.optString("local_model") else data.optString("response_model")
                 val retry = if (data.has("retry_of")) " · format retry" else ""
                 receipt = reading.grounding.evidence + " · " + data.getString("source") + " · " + model + " · " + data.getLong("sdk_ms") + " ms" + retry
-                room.submitFrame(CameraView(frame.timestamp, reading.grounding.framing, reading.grounding.tightenSafe,
-                    camera.canWiden, data.getString("source"), data.getLong("sdk_ms"), reading.grounding.issue))
+                details=if(ref!=null) "Selected by "+ref.method+" · reference "+ref.sensor+"\nMatched on new full frame "+frame.timestamp+
+                    " · "+data.getInt("image_width")+" × "+data.getInt("image_height")+
+                    "\nReference point "+data.getInt("reference_x")+", "+data.getInt("reference_y")+" / 1000" else "Named subject · full frame "+frame.timestamp
+                room.submitFrame(CheckedShot(CameraView(frame.timestamp, reading.grounding.framing, reading.grounding.tightenSafe,
+                    camera.canWiden || ui.stepBack.isChecked, data.getString("source"), data.getLong("sdk_ms"), reading.grounding.issue),checkedAt,thumb))
             } catch (e: TimeoutCancellationException) {
                 if (room.run == run && room.round == round) room.failure("The frame check timed out. Check the camera and model, then retry.")
             } catch (e: CancellationException) { throw e }
@@ -129,16 +167,70 @@ class MainActivity : ComponentActivity() {
         render()
     }
 
+    private fun resetSelection() {
+        picking?.cancel(); picking=null; picker?.dialog?.dismiss(); picker=null; selection=null; needsNewReference=false
+    }
+    private fun selectPhoto() {
+        if(work?.isActive==true || picking?.isActive==true || camera.isRecording) return
+        if(!granted(Manifest.permission.CAMERA)) { permissions.launch(arrayOf(Manifest.permission.CAMERA)); return }
+        val name=(if(room.camera=="A") ui.subject.text.toString() else room.subject).trim()
+        if(name.isBlank()) { ui.subject.error="Name the subject first."; return }
+        picking=lifecycleScope.launch {
+            try {
+                val frame=camera.nextFrame()
+                val photo=PhotoPicker(this@MainActivity,frame,name) { reference ->
+                    selection=reference; needsNewReference=false; render()
+                }
+                picker=photo
+                photo.dialog.setOnDismissListener { if(picker===photo) picker=null; render() }
+                photo.show()
+            } catch(e:CancellationException){ throw e }
+            catch(e:Exception){ ui.message.text="The camera could not freeze a frame. Try again." }
+            finally { picking=null; render() }
+        }
+    }
+    private fun choosePhotoSharing() {
+        if(room.camera=="A") {
+            AlertDialog.Builder(this).setTitle("Checked photos")
+                .setMessage("Camera A’s check photo stays on this phone. Each paired camera can send its own small check photo to the lead over Nearby. Framing results work with photos off. Cloud analysis is a separate setting on each phone.")
+                .setPositiveButton("Close",null).show()
+        } else {
+            AlertDialog.Builder(this).setTitle("Share this camera’s check photo?")
+                .setMessage("Send a small still from each framing check to the paired lead phone over Nearby. With photos off, the lead receives framing and timing only. Cloud analysis is controlled separately.")
+                .setPositiveButton("Share with lead") { _,_ -> room.setPhotoSharing(true) }
+                .setNeutralButton("Photos off") { _,_ -> room.setPhotoSharing(false) }
+                .setNegativeButton("Cancel",null).show()
+        }
+    }
+
     private fun render() {
         if (!::room.isInitialized || !::camera.isInitialized) return
         val busy = work?.isActive == true
+        ui.enableCamera.visibility=if(granted(Manifest.permission.CAMERA)) View.GONE else View.VISIBLE
+        ui.rehearsal.isEnabled=!busy && !camera.isRecording
         val host = room.camera == "A"
+        val name=(if(host) ui.subject.text.toString() else room.subject).trim()
+        val ref=selection?.takeIf { it.subject==name }
+        ui.pick.text=if(ref==null && !needsNewReference) "Select in photo" else "Reselect in photo"
+        ui.pick.isEnabled = !busy && !camera.isRecording && (host || room.subject.isNotBlank())
+        ui.clear.visibility=if(selection!=null || needsNewReference) View.VISIBLE else View.GONE
+        ui.clear.isEnabled=!busy
+        ui.reference.text=if(needsNewReference) "Camera rotated. Reselect in this view, or clear the reference." else
+            ref?.let { "Photo reference · "+it.method+" · camera "+room.camera } ?: ""
+        ui.reference.visibility=if(ref!=null || needsNewReference) View.VISIBLE else View.GONE
+        ui.share.visibility=if(room.size>1) View.VISIBLE else View.GONE
+        ui.share.isEnabled=true
+        ui.share.text=when { host -> "Crew photos"; room.sharePhotos -> "Crew photo on"; else -> "Crew photo off" }
+        ui.details.visibility=if(room.shots.isNotEmpty()) View.VISIBLE else View.GONE
+        ui.stepBack.visibility=if(room.size>1) View.VISIBLE else View.GONE
+        ui.stepBack.isEnabled=!busy
+        ui.board.show(room)
         val choice = room.offer
         val team = room.leader
         val canVerify = team?.let { it.phase == Phase.ASSIGNED && it.done == it.cameras.toSet() } == true
         ui.frameLabel.text = if (room.size == 1) "SOLO CAMERA" else "CAMERA " + room.camera + "  ·  NEARBY"
         ui.team.text = if (room.size == 1) "Crew setup" else "Crew · " + room.size
-        ui.subject.isEnabled = host && !busy
+        ui.subject.isEnabled = host && !busy && !camera.isRecording && team?.phase !in setOf(Phase.OBSERVE,Phase.ASSIGNED,Phase.RECHECK)
         if (!host && room.subject.isNotBlank() && ui.subject.text.toString() != room.subject) ui.subject.setText(room.subject)
         ui.route.text = route.title
         ui.route.isEnabled = !busy; ui.sample.isEnabled = !busy && !camera.isRecording
@@ -165,12 +257,12 @@ class MainActivity : ComponentActivity() {
             room.accepted && !room.done -> "My shot is ready"
             canVerify -> "Verify fresh views"
             !host -> "Waiting for lead camera"
-            room.size > 1 && !room.connected -> "Waiting for crew"
+            room.size > 1 && !room.connected -> "Check camera A"
             team?.phase in setOf(Phase.OBSERVE, Phase.RECHECK, Phase.ASSIGNED) -> "Waiting for crew"
             room.size == 1 -> "Check my frame"
             else -> "Check team framing"
         }
-        ui.check.isEnabled = !busy && (room.size == 1 || room.connected) &&
+        ui.check.isEnabled = !busy && !needsNewReference && (host || room.connected) &&
             (room.needsFrame || choice != null && !room.done || canVerify ||
                 host && team?.phase !in setOf(Phase.OBSERVE, Phase.RECHECK, Phase.ASSIGNED) && !camera.isRecording)
         val activeRound = team?.phase in setOf(Phase.OBSERVE, Phase.ASSIGNED, Phase.RECHECK)
@@ -182,7 +274,7 @@ class MainActivity : ComponentActivity() {
 
     private fun chooseRoute() {
         AlertDialog.Builder(this).setTitle("Where can this frame be analyzed?")
-            .setMessage("On this phone keeps the image local. With cloud fallback, Google may process this camera’s reduced frame and subject text on the free Gemini service. Use public or staged scenes for cloud checks.")
+            .setMessage("With cloud fallback, Google may process this phone’s reduced full frame, subject text and matched point if you selected a detail. Use staged scenes for cloud checks. Nearby photo sharing has its own setting.")
             .setPositiveButton("On this phone") { _, _ -> route = Route.PRIVATE; render() }
             .setNeutralButton("Allow cloud fallback") { _, _ -> route = Route.HYBRID; render() }
             .setNegativeButton("Cancel", null).show()
@@ -212,11 +304,20 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT >= 33) add(Manifest.permission.NEARBY_WIFI_DEVICES)
     }
     private fun granted(permission: String) = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
-    override fun onConfigurationChanged(config: Configuration) {
-        super.onConfigurationChanged(config)
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
         if (!::ui.isInitialized) return
+        if (newConfig.orientation!=displayOrientation) {
+            displayOrientation=newConfig.orientation
+            val hadSelection=selection!=null || picker!=null || needsNewReference
+            resetSelection(); needsNewReference=hadSelection
+            if(work?.isActive==true) {
+                work?.cancel();work=null;room.failure("Camera rotated during the check. Check the new view again.")
+            }
+        }
         ui.arrange()
         if (granted(Manifest.permission.CAMERA)) ui.preview.post { camera.updateViewport() }
+        render()
     }
-    override fun onDestroy() { work?.cancel(); if (::room.isInitialized) room.close(); if (::camera.isInitialized) camera.close(); super.onDestroy() }
+    override fun onDestroy() { resetSelection(); work?.cancel(); if (::room.isInitialized) room.close(); if (::camera.isInitialized) camera.close(); super.onDestroy() }
 }
