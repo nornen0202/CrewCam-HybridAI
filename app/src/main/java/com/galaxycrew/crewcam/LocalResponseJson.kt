@@ -7,7 +7,7 @@ internal class LocalOutputFailure(val kind: String, message: String, cause: Thro
     IllegalArgumentException(message, cause)
 
 internal object LocalResponseJson {
-    /** Only field/schema decoding opts into repair; downstream semantic/safety failures never do. */
+    /** Schema failures are reported before an observation can reach the crew. */
     fun <T> contract(block: () -> T): T = try { block() } catch (error: Exception) {
         throw when (error) {
             is LocalOutputFailure -> error
@@ -20,8 +20,22 @@ internal object LocalResponseJson {
         try {
             require(text.isNotBlank() && text.length <= 16_000)
             val reader = JSONTokener(text)
-            val value = reader.nextValue()
-            require(value is JSONObject && reader.nextClean() == '\u0000')
+            require(reader.nextClean() == '{')
+            val value = JSONObject()
+            var next = reader.nextClean()
+            while (next != '}') {
+                require(next == '"')
+                val key = reader.nextString(next)
+                require(!value.has(key) && reader.nextClean() == ':') { "Repeated or malformed field" }
+                value.put(key, reader.nextValue())
+                next = reader.nextClean()
+                if (next != '}') {
+                    require(next == ',')
+                    next = reader.nextClean()
+                    require(next == '"')
+                }
+            }
+            require(reader.nextClean() == '\u0000')
             return value
         } catch (error: Exception) {
             throw LocalOutputFailure("MALFORMED_JSON",

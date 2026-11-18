@@ -28,6 +28,8 @@ Windows developers can stage the same inputs on a local SSD using `scripts/build
 
 The actual call to Firebase AI Logic is in [HybridInference.kt](app/src/main/java/com/galaxycrew/crewcam/HybridInference.kt). CameraX supplies a new sensor timestamp. [TeamRound.kt](app/src/main/java/com/galaxycrew/crewcam/TeamRound.kt) checks each camera's own frame sequence, accepted role and observed framing. A new run invalidates outstanding assignments.
 
-On a debug installation, `scripts/sample_check.py` selects one explicit device, verifies the installed APK digest and exports each sample outcome. The local, forced-cloud and two-image automatic-fallback samples are separate checks. These fixtures exercise routing. The normal camera screen is the entry point for filming evidence.
+On a debug installation, `scripts/sample_check.py` matches the installed APK digest and exports each outcome. Add `--require-nano4` to the local sample to check the actual model name. The stable-model sample pins the stable category and calls the SDK with one image in local-first mode. If stable is unavailable, the SDK can fall back even on a phone with a working preview model. The result displays what happened on this installation.
+
+An ambiguous model response earns no framing cue. Repeated JSON fields cause a schema failure. A malformed local answer can trigger one new inference on the same frame. Strictly local mode retries on the device. When the operator has allowed cloud fallback, the application can retry in the cloud. The request journal links both attempts. This recovery is separate from the SDK routing a request automatically.
 
 [Entry plan and official sources](docs/ENTRY_PLAN.md) · [Evaluation and demo shot list](docs/DEMO_AND_EVALUATION.md) · [Inherited work and new development](docs/PROVENANCE.md) · [License](LICENSE)

@@ -114,7 +114,9 @@ class MainActivity : ComponentActivity() {
                 } finally { frame.bitmap.recycle() }
                 if (room.run != run || room.round != round || !room.needsFrame) return@launch
                 val data = reading.receipt
-                receipt = reading.grounding.evidence + " · " + data.getString("source") + " · " + data.getLong("sdk_ms") + " ms"
+                val model = if (data.getString("source") == "ON_DEVICE") data.optString("local_model") else data.optString("response_model")
+                val retry = if (data.has("retry_of")) " · format retry" else ""
+                receipt = reading.grounding.evidence + " · " + data.getString("source") + " · " + model + " · " + data.getLong("sdk_ms") + " ms" + retry
                 room.submitFrame(CameraView(frame.timestamp, reading.grounding.framing, reading.grounding.tightenSafe,
                     camera.canWiden, data.getString("source"), data.getLong("sdk_ms"), reading.grounding.issue))
             } catch (e: TimeoutCancellationException) {

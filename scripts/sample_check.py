@@ -17,7 +17,11 @@ def main():
     parser.add_argument("--serial", required=True)
     parser.add_argument("--apk", required=True, type=Path)
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument("--require-nano4", action="store_true",
+                        help="A local check must report an actual Nano 4 model name.")
     args = parser.parse_args()
+    if args.require_nano4 and args.check != "local":
+        parser.error("--require-nano4 applies to the local check")
     if args.out.exists():
         parser.error("Choose a new evidence filename.")
     def adb(*words, check=True):
@@ -63,13 +67,15 @@ def main():
     status = next((e["display"] for e in events if e.get("event") == "sample_status"), "No completion receipt")
     print(args.check, status, "->", args.out)
     expected = {"local": ("ONLY_ON_DEVICE", "ON_DEVICE", 1, "WIDE"), "cloud": ("ONLY_IN_CLOUD", "IN_CLOUD", 1, "WIDE"),
-                "fallback": ("PREFER_ON_DEVICE", "IN_CLOUD", 2, "WIDE"),
+                "fallback": ("PREFER_ON_DEVICE", "IN_CLOUD", 1, "WIDE"),
                 "medium": ("ONLY_IN_CLOUD", "IN_CLOUD", 1, "MEDIUM"),
                 "close": ("ONLY_IN_CLOUD", "IN_CLOUD", 1, "CLOSE"),
                 "absent": ("ONLY_IN_CLOUD", "IN_CLOUD", 1, "UNCERTAIN")}.get(args.check)
     if expected:
         return 0 if any((e.get("mode"), e.get("source"), e.get("images"), e.get("framing")) == expected
-                        and e.get("result") == "valid" for e in events) else 1
+                        and e.get("result") == "valid"
+                        and (not args.require_nano4 or "nano-v4" in str(e.get("local_model")).lower())
+                        for e in events) else 1
     if args.check == "appcheck":
         return 0 if status == "App Check verified for this installation." else 1
     if args.check == "preferred":

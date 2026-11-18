@@ -79,4 +79,9 @@ class FrameGroundingTest {
         assertEquals(FramingIssue.MISSING, parse(liveBox.put("target_visible", false)).issue)
         assertEquals(FramingIssue.EDGE, parse(withBox(listOf(5, 300, 310, 600))).issue)
     }
+
+    @Test fun repeatedCoordinatesFromNanoCannotChooseAnAngle() {
+        val duplicate = reply("WIDE").replace("\"box_2d\":", "\"box_2d\":[0,0,990,990],\"box_2d\":")
+        assertThrows(LocalOutputFailure::class.java) { FrameGroundingContract.parse(duplicate) }
+    }
 }

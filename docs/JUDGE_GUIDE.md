@@ -6,7 +6,7 @@ Start with a Galaxy supported by the Android Firebase AI Logic on-device SDK. In
 
 Open **Sample checks**. The test input is a drawing made on your phone. Choose **On-device sample** to request a strictly local response. Under **Model setup and other checks**, **Check preview model availability** shows the categories that Firebase can see. **Prepare local model** starts a download if AICore reports a downloadable model. The preview requires the official enrollment process and Wi-Fi on supported devices. A successful result identifies the source as **ON DEVICE**. [AICore preview](https://developers.google.com/ml-kit/genai/aicore-dev-preview)
 
-Select **Local-first sample**. Read the source beneath the picture. **Cloud sample** requests cloud explicitly. **Two-image fallback sample** supplies an extra generated reference image to Firebase's local-first route. The response identifies the final source. Three additional cloud fixtures check a medium-size ball, a close ball, and an empty table. They have known intended results.
+Select **Local-first sample**. Read the source beneath the picture. **Cloud sample** requests cloud explicitly. **Stable-model fallback sample** selects the stable on-device model category with the same single image. If stable is unavailable on your phone, the SDK can automatically use the cloud. The response identifies the actual source. Three additional cloud fixtures check a medium-size ball, a close ball and an empty table. They have known intended results.
 
 ## Film a live subject
 

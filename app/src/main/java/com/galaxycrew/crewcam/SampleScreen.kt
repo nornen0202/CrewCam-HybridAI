@@ -50,7 +50,7 @@ internal class SampleScreen(private val context: Context, onCheck: (Int) -> Unit
         control(menu, 6, "Local-first sample", true)
         control(menu, 2, "On-device sample")
         control(menu, 3, "Cloud sample")
-        control(menu, 4, "Two-image fallback sample")
+        control(menu, 4, "Stable-model fallback sample")
         val extra = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL; visibility = View.GONE }
         val more = button("Model setup and other checks", false) { extra.visibility = if (extra.visibility == View.GONE) View.VISIBLE else View.GONE }
         menu.addView(more); menu.addView(extra)

@@ -67,15 +67,15 @@ class SampleActivity : ComponentActivity() {
     private suspend fun sample(index: Int): String {
         val view = when (index) { 8 -> SampleCheck.View.MEDIUM; 9 -> SampleCheck.View.CLOSE; 10 -> SampleCheck.View.EMPTY; else -> SampleCheck.View.WIDE }
         val frame = SampleCheck.frame(view)
-        val reference = if (index == 4) SampleCheck.frame(SampleCheck.View.CLOSE).bitmap else null
         val route = when (index) { 2 -> Route.PRIVATE; 4, 6 -> Route.HYBRID; else -> Route.CLOUD }
-        screen.showImage(frame.bitmap, if (reference != null) "Generated pair · current frame shown" else view.caption)
-        val result = try {
-            inference.observe(UUID.randomUUID().toString(), "sample", "A", SampleCheck.subject, frame, route, reference)
-        } finally { reference?.recycle() }
+        screen.showImage(frame.bitmap, if (index == 4) "Generated image · stable local model requested" else view.caption)
+        val result = inference.observe(UUID.randomUUID().toString(), "sample", "A", SampleCheck.subject, frame, route, stableProbe = index == 4)
         val data = result.receipt
         val seconds = String.format(Locale.US, "%.1f s", data.getLong("sdk_ms") / 1000.0)
         val source = if (data.getString("source") == "ON_DEVICE") "ON DEVICE" else "IN CLOUD"
-        return result.grounding.framing + "  ·  " + source + "  ·  " + seconds + "\n" + result.grounding.evidence
+        val model = if (source == "ON DEVICE") data.optString("local_model") else data.optString("response_model")
+        val retry = if (data.has("retry_of")) " · format retry" else ""
+        return result.grounding.framing + "  ·  " + source + "  ·  " + seconds + "\n" +
+            result.grounding.evidence + "\n" + model + retry
     }
 }

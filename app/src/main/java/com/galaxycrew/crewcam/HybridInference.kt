@@ -43,7 +43,7 @@ internal class HybridInference(private val log: (JSONObject) -> Unit) {
             Route.PRIVATE -> InferenceMode.ONLY_ON_DEVICE
             Route.HYBRID -> InferenceMode.PREFER_ON_DEVICE
             Route.CLOUD -> InferenceMode.ONLY_IN_CLOUD
-        }, maxOutputTokens = 320, modelOption = option)
+        }, maxOutputTokens = 320, temperature = 0f, modelOption = option)
     )
 
     private suspend fun inspect(option: OnDeviceModelOption): LocalModel {
@@ -92,25 +92,38 @@ internal class HybridInference(private val log: (JSONObject) -> Unit) {
         return states.joinToString("\n")
     }
 
+    private class InvalidLocalReply(val request: String, cause: LocalOutputFailure) : Exception(cause)
+
     suspend fun observe(run: String, round: String, camera: String, subject: String, frame: Frame,
-                        route: Route, reference: Bitmap? = null): Reading {
+                        route: Route, stableProbe: Boolean = false): Reading {
         require(subject.isNotBlank() && subject.length <= 80)
-        require(reference == null || (route == Route.HYBRID && frame.origin == "generated sample"))
+        require(!stableProbe || (route == Route.HYBRID && frame.origin == "generated sample"))
+        try { return request(run, round, camera, subject, frame, route, stableProbe, null) }
+        catch (invalid: InvalidLocalReply) {
+            if (stableProbe) throw requireNotNull(invalid.cause)
+            val retryRoute = if (route == Route.HYBRID) Route.CLOUD else Route.PRIVATE
+            try { return request(run, round, camera, subject, frame, retryRoute, false, invalid.request) }
+            catch (again: InvalidLocalReply) { throw requireNotNull(again.cause) }
+        }
+    }
+
+    private suspend fun request(run: String, round: String, camera: String, subject: String, frame: Frame,
+                                route: Route, stableProbe: Boolean, retryOf: String?): Reading {
         val started = SystemClock.elapsedRealtime()
         val receipt = JSONObject().put("event", "inference").put("run", run).put("round", round)
             .put("request", java.util.UUID.randomUUID().toString()).put("camera", camera)
-            .put("frame", frame.timestamp).put("origin", frame.origin).put("images", if (reference == null) 1 else 2)
+            .put("frame", frame.timestamp).put("origin", frame.origin).put("images", 1)
             .put("mode", when (route) { Route.PRIVATE -> "ONLY_ON_DEVICE"; Route.HYBRID -> "PREFER_ON_DEVICE"; Route.CLOUD -> "ONLY_IN_CLOUD" })
             .put("source", JSONObject.NULL).put("cloud_model_config", CLOUD_MODEL)
         try {
-            val local = if (route != Route.CLOUD) preferredModel() else null
+            if (retryOf != null) receipt.put("retry_of", retryOf).put("retry_reason", "invalid_local_output")
+            val local = when { stableProbe -> inspect(OnDeviceModelOption.STABLE); route != Route.CLOUD -> preferredModel(); else -> null }
             receipt.put("local_category", local?.option?.toString() ?: JSONObject.NULL)
                 .put("local_status", local?.status?.toString() ?: JSONObject.NULL)
             val ai = model(route, local?.option ?: OnDeviceModelOption.STABLE)
             val prompt = content {
-                if (reference != null) { text("Reference sample image."); image(reference) }
                 image(frame.bitmap)
-                text(FrameGroundingContract.prompt(subject))
+                text(FrameGroundingContract.prompt(subject, retryOf != null))
             }
             val sdkStart = SystemClock.elapsedRealtime()
             val response = ai.generateContent(prompt)
@@ -133,7 +146,11 @@ internal class HybridInference(private val log: (JSONObject) -> Unit) {
             val raw = response.text.orEmpty().trim()
             if (frame.origin == "generated sample") receipt.put("sample_response", raw.take(1600))
             val text = fencedJson.matchEntire(raw)?.groupValues?.get(1) ?: raw
-            val grounding = FrameGroundingContract.parse(text)
+            val grounding = try { FrameGroundingContract.parse(text) }
+                catch (e: LocalOutputFailure) {
+                    if (source == "ON_DEVICE") throw InvalidLocalReply(receipt.getString("request"), e)
+                    throw e
+                }
             receipt.put("result", "valid").put("framing", grounding.framing).put("grounding", grounding.observation)
             return Reading(grounding, receipt)
         } catch (e: Exception) {
