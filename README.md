@@ -4,6 +4,8 @@ Two people can both film the birthday cake and miss the room around it. CrewCam 
 
 ## Try it on Android
 
+On a Galaxy S25 Ultra, Gemini Nano 4 checked a live bottle and an offline sample. A fresh installation of the signed release passed Play Integrity, local inference, forced cloud and automatic cloud fallback. The operator also played back a new recording on that release. The two-phone field trial is pending. Judges can install the signed build through the Firebase App Distribution invitation supplied in Devpost. [Measurements and limitations](docs/validation/2026-11-19/README.md) · [Judge instructions](docs/JUDGE_GUIDE.md)
+
 1. Open **CrewCam Hybrid** and allow camera access. To inspect the model without pointing the camera at anyone, open **Sample checks**. The orange ball is generated on the phone. Start with **Check model**, prepare the local model if needed, and select **On-device sample**.
 2. For one live view, describe an object in the preview and tap **Check my frame**. The app shows the observed framing, source and elapsed inference time. If the object cannot be located, adjust the view and try again.
 3. For a crew, the leader opens **Crew setup → Lead a crew**. Each other phone chooses **Join a crew** and the same total count. Confirm the matching Nearby digits on both sides. Each camera has its own cloud preference and sees the subject before it shares its observation.

@@ -6,20 +6,24 @@ Two relatives can both point a phone at the birthday cake. When the candles go o
 
 ## What CrewCam does
 
-Each camera operator names or confirms the subject and checks the current view. The lead phone collects the framing observations over Nearby and suggests who should hold, widen or move closer. Each operator can accept or decline. After everyone marks ready, CrewCam asks for a new camera frame from each phone. The lead can verify the plan only when these later observations match the assigned views. Each phone can save its own original recording.
+Each operator checks the framing on their own phone. The lead receives observations over Nearby and suggests who should hold, widen or move closer. Each operator can accept or decline. After everyone marks ready, the lead asks for a fresh frame from every camera. CrewCam can verify the plan only when those later observations match the assigned views. Each phone saves its own original recording.
 
-## How we built it
+## How I built it
 
-CameraX supplies a cropped, upright frame and its sensor timestamp. Firebase AI Logic asks Gemini to locate the visible subject. Kotlin maps that extent to a wide, medium or close view, with uncertainty bands between categories. This lets the app explain a cue using the actual observation. Each camera starts in on-device-only mode. Its operator can allow Firebase to fall back to the cloud. The crew exchanges framing metadata over Google Nearby Connections. The camera image stays with its operator unless that operator allows cloud processing.
+CameraX supplies a cropped, upright camera frame and its sensor timestamp. Firebase AI Logic asks Gemini to locate one named subject. Kotlin maps the visible extent to a wide, medium or close view. An ambiguous size earns an explanation and a chance to reframe. Each camera starts in on-device-only mode. Its operator can allow cloud fallback. The phones exchange framing metadata over Google Nearby Connections.
 
-I started this Firebase entry on November 17, 2026. An earlier CrewCam prototype supplied the framing policy, allocation rules and Nearby transport. During this hackathon I created a separate Android app with per-camera Firebase inference, App Check, cloud consent, a fresh-frame verification workflow and per-request source receipts. I also built a generated orange-ball scene so reviewers can try the routing without filming anyone.
+I started the Firebase entry on November 17, 2026. An earlier CrewCam prototype contributed framing thresholds, allocation rules and Nearby pairing. I built the per-camera Firebase integration, individual cloud consent, App Check, the fresh-frame crew workflow and source receipts for this entry.
 
-## What I have tested
+## What I tested
 
-On a Galaxy S25 Ultra I obtained an App Check token and exercised forced cloud and automatic fallback through Firebase AI Logic. In a live test with a plastic bottle, the first request timed out. A retry on a newly captured frame returned a wide view from the cloud. A separate 22.023-second camera original decoded through all 662 frames. The generated image checks and the live camera run have separate receipts.
+On one Galaxy S25 Ultra, I turned off Wi-Fi and mobile data. Gemini Nano 4 Fast classified a generated wide shot in 11.959 seconds with no active default network. With connectivity restored, I selected an unavailable stable model in local-first mode. Firebase automatically returned a cloud result from the same input.
 
-## What I learned and what comes next
+The rear camera also checked a real plastic bottle on the phone in 14.153 seconds. CrewCam reported a medium view. Its same-run original saved and decoded through all 206 frames. When I asked for a violet umbrella that was absent from the scene, the phone reported the subject missing. A fresh install of the signed release passed Play Integrity, local inference, cloud inference and automatic fallback.
 
-A route preference cannot tell a camera operator where an image was actually processed. CrewCam uses the source attached to the completed SDK response. A plausible framing category is also insufficient to verify movement. Each camera needs a later sensor frame and the crew still needs the requested mix of views.
+## What I learned
 
-The next filming milestone is a full S25 Ultra and Fold8 take with a visible physical adjustment, fresh verification and both originals. I will compare it with unassisted filming and with a verbal wide/close assignment. The validation report records local model availability and the exact hardware used.
+A model can locate an object while its framing remains ambiguous. It can also return two coordinates for the same field. CrewCam rejects duplicate fields and keeps uncertain framing out of a crew verdict. A routing preference alone also cannot identify where an image was processed. The app records the source on each actual Firebase response.
+
+## What comes next
+
+The next field trial pairs the S25 Ultra and Fold8 for a take with an accepted cue, a visible physical adjustment, a new verdict from both cameras and two saved originals. That pair will also be compared with unassisted filming and a verbal wide/close assignment. The validation report distinguishes the one-phone measurements from these remaining trials.

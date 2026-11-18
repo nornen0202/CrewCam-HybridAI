@@ -1,6 +1,8 @@
 # Try CrewCam
 
-Start with a Galaxy supported by the Android Firebase AI Logic on-device SDK. Install a configured, signed contest build. For this development snapshot, the registered S25 Ultra installation is the one with verified cloud access. A new debug installation needs its own App Check registration. That is a private console operation for the entry maintainer. The release build uses Play Integrity. [Supported devices](https://developers.google.com/ml-kit/genai) · [Firebase App Check](https://firebase.google.com/docs/app-check/android/play-integrity-provider)
+Start with a phone supported by the Android Firebase AI Logic on-device SDK. Install the signed CrewCam build from the testing link supplied to judges. The release uses Play Integrity and was verified on a fresh S25 Ultra installation. The APK SHA-256 is `894103dee59343f92f7942e97e60829692ffab8903e544d30726b1a9ceb24579`. Source builders using the debug provider must privately register their own installation token. [Hardware and actual measurements](validation/2026-11-19/README.md) · [Supported devices](https://developers.google.com/ml-kit/genai) · [Firebase App Check](https://firebase.google.com/docs/app-check/android/play-integrity-provider)
+
+Use the test-build link in the Devpost judging form to join **CrewCam Hackathon Judges** using an email address you can access. When the Firebase App Distribution invitation arrives, open **Get started** on your Android device with that Google account. Look for **CrewCam Hybrid 0.1-hybrid (1)**. The invitation and release are free. The group link is stored in Devpost’s judge-only field.
 
 ## A one-minute sample
 
