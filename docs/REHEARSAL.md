@@ -10,4 +10,12 @@ After the first checks, choose **Keep current views** or **Apply suggested frami
 
 Select **Play both virtual views** after the verdict. A single Android player decodes the source while the renderer draws both crop windows on each update. Watch the shared source clock while the room stays wide in A and the chosen detail fills more of B. The receipt records the first and last displayed player positions and how many distinct positions were drawn.
 
+The comparison tool checks the source times, pixel hashes and real SDK responses together. To reproduce the two published comparisons from the source checkout, run the following command.
+
+```sh
+python scripts/compare_rehearsals.py --report docs/validation/2026-11-19/crew-ui.json
+```
+
+To compare your own Keep and Apply experiments, export both JSON files from the phone's app-specific rehearsal folder. Pass their paths to the same script in that order. The report lists which later camera inputs changed, both measured verdicts and their respective inference receipts.
+
 For the bundled scene, the default subject is the light-blue ball in front of the baby. In the first matched experiment, all eight requests for the two branches returned `ON_DEVICE` with `nano-v4-fast`. Both unadjusted views stayed wide in the keep condition, and the later frame prompted a retry. In the adjusted condition A kept the entire 1920 × 1080 source, B used the rectangle (928, 644) to (1409, 915), and the later check verified wide and medium. A separate trial on the baby's face produced two uncertain observations at 43.1% extent, inside the framing policy's gap. The app withheld a role assignment for that trial.

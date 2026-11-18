@@ -1,0 +1,2023 @@
+{
+  "device": "Galaxy S25 Ultra SM-S938N",
+  "os": "Android 17, API 37",
+  "date_local": "2026-11-19",
+  "timezone": "Asia/Seoul",
+  "android_source_commit": "9f333187fefb769b5043ffe6e66350791fed0a5a",
+  "signed_review_apk": "8491ff3406afa0dc84769f331f41ad9a87a0fd0d8b4e74478f734bdf43f2ed98",
+  "signed_review_bytes": 58391924,
+  "judges_group_version": "0.1-hybrid (1)",
+  "judge_apk_sha256": "894103dee59343f92f7942e97e60829692ffab8903e544d30726b1a9ceb24579",
+  "build": {
+    "unit_tests": 23,
+    "failures": 0,
+    "errors": 0,
+    "lint_warnings": 16,
+    "lint_errors": 0
+  },
+  "clean_public_clone": {
+    "private_firebase_config": false,
+    "bundled_movie": false,
+    "unit_tests": 23,
+    "failures": 0,
+    "errors": 0,
+    "lint_warnings": 16,
+    "lint_errors": 0
+  },
+  "rehearsals": [
+    {
+      "run": "8c869d59-6e3c-4736-8a84-4c12c99afd66",
+      "build": "0.2-hybrid",
+      "physical_phones": 1,
+      "virtual_views": 2,
+      "input_origin": "generated Flow video",
+      "source_sha256": "60d091cc8a30f0664fa750264d7e402c80ce98a8c04e51fb5c6b058a90cc93a9",
+      "subject": "face of the baby in the middle",
+      "transport": "in process",
+      "branch": "undecided",
+      "result": "retry",
+      "message": "Camera A · The size falls between framing categories. Move a little closer or farther, then recheck.",
+      "inputs": [
+        {
+          "stage": "initial",
+          "camera": "A",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "d48154fd-ec77-4fc6-bab7-ff308d895daa",
+          "framing": "UNCERTAIN",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 14821,
+          "request": "2d5ef283-ad5b-4ac1-a87f-6fb525f9a235",
+          "issue": "BETWEEN"
+        },
+        {
+          "stage": "initial",
+          "camera": "B",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "d48154fd-ec77-4fc6-bab7-ff308d895daa",
+          "framing": "UNCERTAIN",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 12600,
+          "request": "13bca99c-0ead-4031-b1e1-cb696488c99d",
+          "issue": "BETWEEN"
+        }
+      ],
+      "tag": "keep01",
+      "apk_sha256": "3335e8bf2f9cfb0416ef94f6a9a949baf5bd1f707204e6e38e89ebb6b5bf784d",
+      "events": [
+        {
+          "event": "inference",
+          "run": "8c869d59-6e3c-4736-8a84-4c12c99afd66",
+          "round": "d48154fd-ec77-4fc6-bab7-ff308d895daa",
+          "request": "2d5ef283-ad5b-4ac1-a87f-6fb525f9a235",
+          "camera": "A",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 14821,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "UNCERTAIN",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 431,
+            "issue": "BETWEEN",
+            "derived_framing": "UNCERTAIN",
+            "box_2d": [
+              243,
+              363,
+              674,
+              664
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "8c869d59-6e3c-4736-8a84-4c12c99afd66",
+          "round": "d48154fd-ec77-4fc6-bab7-ff308d895daa",
+          "sender": "A",
+          "to": "*",
+          "verified": false
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "8c869d59-6e3c-4736-8a84-4c12c99afd66",
+          "round": "d48154fd-ec77-4fc6-bab7-ff308d895daa",
+          "sender": "A",
+          "to": "*",
+          "verified": false,
+          "direction": "received"
+        },
+        {
+          "event": "inference",
+          "run": "8c869d59-6e3c-4736-8a84-4c12c99afd66",
+          "round": "d48154fd-ec77-4fc6-bab7-ff308d895daa",
+          "request": "13bca99c-0ead-4031-b1e1-cb696488c99d",
+          "camera": "B",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 12600,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "UNCERTAIN",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 431,
+            "issue": "BETWEEN",
+            "derived_framing": "UNCERTAIN",
+            "box_2d": [
+              243,
+              363,
+              674,
+              664
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        }
+      ]
+    },
+    {
+      "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+      "build": "0.2-hybrid",
+      "physical_phones": 1,
+      "virtual_views": 2,
+      "input_origin": "generated Flow video",
+      "source_sha256": "60d091cc8a30f0664fa750264d7e402c80ce98a8c04e51fb5c6b058a90cc93a9",
+      "subject": "light blue ball on the table in front of the baby",
+      "transport": "in process",
+      "branch": "keep original framing",
+      "result": "retry",
+      "message": "The fresh views still miss a requested framing. Check the scene again.",
+      "inputs": [
+        {
+          "stage": "initial",
+          "camera": "A",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 7557,
+          "request": "35df838d-0c21-47e6-88d3-55d44fb47548",
+          "issue": null
+        },
+        {
+          "stage": "initial",
+          "camera": "B",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 12357,
+          "request": "e77556e1-7a71-4af9-8f48-9c8bf1a58840",
+          "issue": null
+        },
+        {
+          "stage": "fresh",
+          "camera": "A",
+          "source_pts_us": 1500000,
+          "source_frame_index": 36,
+          "frame_id": 1500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "5b32f3900b7ff1673f46e0208512ce6de86eca757e2829df460904fc2dd284c0",
+          "round": "3e048ded-f103-4de4-bc37-5bf359d76dac",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 8331,
+          "request": "cdeabab3-f8d4-4667-a867-7483ed9fa61e",
+          "issue": null
+        },
+        {
+          "stage": "fresh",
+          "camera": "B",
+          "source_pts_us": 1500000,
+          "source_frame_index": 36,
+          "frame_id": 1500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "5b32f3900b7ff1673f46e0208512ce6de86eca757e2829df460904fc2dd284c0",
+          "round": "3e048ded-f103-4de4-bc37-5bf359d76dac",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 11446,
+          "request": "93a57128-2746-4f77-80fe-fa70773bbde6",
+          "issue": null
+        }
+      ],
+      "tag": "keep02",
+      "apk_sha256": "3335e8bf2f9cfb0416ef94f6a9a949baf5bd1f707204e6e38e89ebb6b5bf784d",
+      "events": [
+        {
+          "event": "inference",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "request": "35df838d-0c21-47e6-88d3-55d44fb47548",
+          "camera": "A",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 7557,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 153,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              645,
+              553,
+              798,
+              664
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "inference",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "request": "e77556e1-7a71-4af9-8f48-9c8bf1a58840",
+          "camera": "B",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 12357,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 153,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              645,
+              553,
+              798,
+              664
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "assignment",
+          "kind": "assignment",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "sender": "A",
+          "to": "A",
+          "target": "WIDE",
+          "action": "HOLD"
+        },
+        {
+          "event": "assignment",
+          "kind": "assignment",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "sender": "A",
+          "to": "B",
+          "target": "MEDIUM",
+          "action": "TIGHTEN_CURRENT"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "sender": "A",
+          "to": "A"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "sender": "B",
+          "to": "A"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "sender": "B",
+          "to": "A",
+          "direction": "received"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "sender": "A",
+          "to": "A"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "sender": "B",
+          "to": "A"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "63798968-17a7-4f6c-a450-e304b9a58d86",
+          "sender": "B",
+          "to": "A",
+          "direction": "received"
+        },
+        {
+          "event": "inference",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "3e048ded-f103-4de4-bc37-5bf359d76dac",
+          "request": "cdeabab3-f8d4-4667-a867-7483ed9fa61e",
+          "camera": "A",
+          "frame": 1500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 8331,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 170,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              655,
+              553,
+              825,
+              665
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "inference",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "3e048ded-f103-4de4-bc37-5bf359d76dac",
+          "request": "93a57128-2746-4f77-80fe-fa70773bbde6",
+          "camera": "B",
+          "frame": 1500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 11446,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 170,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              655,
+              553,
+              825,
+              665
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "3e048ded-f103-4de4-bc37-5bf359d76dac",
+          "sender": "A",
+          "to": "*",
+          "verified": false
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+          "round": "3e048ded-f103-4de4-bc37-5bf359d76dac",
+          "sender": "A",
+          "to": "*",
+          "verified": false,
+          "direction": "received"
+        },
+        {
+          "event": "paired_virtual_playback",
+          "source": "one decoder",
+          "first_position_ms": 0,
+          "last_position_ms": 7837,
+          "displayed_updates": 190
+        }
+      ]
+    },
+    {
+      "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+      "build": "0.2-hybrid",
+      "physical_phones": 1,
+      "virtual_views": 2,
+      "input_origin": "generated Flow video",
+      "source_sha256": "60d091cc8a30f0664fa750264d7e402c80ce98a8c04e51fb5c6b058a90cc93a9",
+      "subject": "light blue ball on the table in front of the baby",
+      "transport": "in process",
+      "branch": "apply suggested framing",
+      "result": "verified",
+      "message": "Fresh views match the assigned framing.",
+      "inputs": [
+        {
+          "stage": "initial",
+          "camera": "A",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 7448,
+          "request": "ab0825ab-ec7a-44fe-bcc7-4f337787799b",
+          "issue": null
+        },
+        {
+          "stage": "initial",
+          "camera": "B",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 12457,
+          "request": "cbbf425d-4871-4f8b-8887-b4c6bbb29ad8",
+          "issue": null
+        },
+        {
+          "stage": "fresh",
+          "camera": "A",
+          "source_pts_us": 1500000,
+          "source_frame_index": 36,
+          "frame_id": 1500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "5b32f3900b7ff1673f46e0208512ce6de86eca757e2829df460904fc2dd284c0",
+          "round": "627c956f-f331-4fcc-830b-1bf71c489c67",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 9623,
+          "request": "07c62f10-2662-4ca3-96c5-db4e9e427737",
+          "issue": null
+        },
+        {
+          "stage": "fresh",
+          "camera": "B",
+          "source_pts_us": 1500000,
+          "source_frame_index": 36,
+          "frame_id": 1500000001,
+          "crop_xyxy_px": [
+            928,
+            644,
+            1409,
+            915
+          ],
+          "input_width": 481,
+          "input_height": 271,
+          "input_argb_sha256": "7ec28c510767a14bb4c46812df5cbc5b93c40dbd069164c383ca7d59e206351b",
+          "round": "627c956f-f331-4fcc-830b-1bf71c489c67",
+          "framing": "MEDIUM",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 9682,
+          "request": "9c465363-cbab-489a-a46a-4bed3d14d03d",
+          "issue": null
+        }
+      ],
+      "tag": "adjust01",
+      "apk_sha256": "3335e8bf2f9cfb0416ef94f6a9a949baf5bd1f707204e6e38e89ebb6b5bf784d",
+      "events": [
+        {
+          "event": "inference",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "request": "ab0825ab-ec7a-44fe-bcc7-4f337787799b",
+          "camera": "A",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 7448,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 153,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              645,
+              553,
+              798,
+              664
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "inference",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "request": "cbbf425d-4871-4f8b-8887-b4c6bbb29ad8",
+          "camera": "B",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 12457,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 153,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              645,
+              553,
+              798,
+              664
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "assignment",
+          "kind": "assignment",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "sender": "A",
+          "to": "A",
+          "target": "WIDE",
+          "action": "HOLD"
+        },
+        {
+          "event": "assignment",
+          "kind": "assignment",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "sender": "A",
+          "to": "B",
+          "target": "MEDIUM",
+          "action": "TIGHTEN_CURRENT"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "sender": "A",
+          "to": "A"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "sender": "B",
+          "to": "A"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "sender": "B",
+          "to": "A",
+          "direction": "received"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "sender": "A",
+          "to": "A"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "sender": "B",
+          "to": "A"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "8910cad0-fff2-466e-b0b6-d981ca3ac739",
+          "sender": "B",
+          "to": "A",
+          "direction": "received"
+        },
+        {
+          "event": "inference",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "627c956f-f331-4fcc-830b-1bf71c489c67",
+          "request": "07c62f10-2662-4ca3-96c5-db4e9e427737",
+          "camera": "A",
+          "frame": 1500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 9623,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 170,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              655,
+              553,
+              825,
+              665
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "inference",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "627c956f-f331-4fcc-830b-1bf71c489c67",
+          "request": "9c465363-cbab-489a-a46a-4bed3d14d03d",
+          "camera": "B",
+          "frame": 1500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 9682,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "MEDIUM",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 642,
+            "issue": null,
+            "derived_framing": "MEDIUM",
+            "box_2d": [
+              273,
+              275,
+              915,
+              675
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "627c956f-f331-4fcc-830b-1bf71c489c67",
+          "sender": "A",
+          "to": "*",
+          "verified": true
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "2a821e82-81b2-4f66-b3c8-23b09e74433f",
+          "round": "627c956f-f331-4fcc-830b-1bf71c489c67",
+          "sender": "A",
+          "to": "*",
+          "verified": true,
+          "direction": "received"
+        },
+        {
+          "event": "paired_virtual_playback",
+          "source": "one decoder",
+          "first_position_ms": 0,
+          "last_position_ms": 7829,
+          "displayed_updates": 189
+        }
+      ]
+    },
+    {
+      "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+      "build": "0.2-hybrid",
+      "physical_phones": 1,
+      "virtual_views": 2,
+      "input_origin": "generated Flow video",
+      "source_sha256": "60d091cc8a30f0664fa750264d7e402c80ce98a8c04e51fb5c6b058a90cc93a9",
+      "subject": "light blue ball on the table in front of the baby",
+      "transport": "in process",
+      "branch": "keep original framing",
+      "result": "retry",
+      "message": "The fresh views still miss a requested framing. Check the scene again.",
+      "inputs": [
+        {
+          "stage": "initial",
+          "camera": "A",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 11571,
+          "request": "5358e6cf-964b-41b3-9f71-863720ebecfb",
+          "issue": null
+        },
+        {
+          "stage": "initial",
+          "camera": "B",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 9697,
+          "request": "11783a95-60f6-4ef1-aba5-af402ad2a441",
+          "issue": null
+        },
+        {
+          "stage": "fresh",
+          "camera": "A",
+          "source_pts_us": 1500000,
+          "source_frame_index": 36,
+          "frame_id": 1500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "5b32f3900b7ff1673f46e0208512ce6de86eca757e2829df460904fc2dd284c0",
+          "round": "bab26f34-10c2-4050-94a4-5abc973687f5",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 9741,
+          "request": "d43a0059-1778-4aed-8bcc-b37c154c4d62",
+          "issue": null
+        },
+        {
+          "stage": "fresh",
+          "camera": "B",
+          "source_pts_us": 1500000,
+          "source_frame_index": 36,
+          "frame_id": 1500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "5b32f3900b7ff1673f46e0208512ce6de86eca757e2829df460904fc2dd284c0",
+          "round": "bab26f34-10c2-4050-94a4-5abc973687f5",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 9741,
+          "request": "b5edfdda-f918-4869-b428-1a875e48857f",
+          "issue": null
+        }
+      ],
+      "tag": "final-keep",
+      "apk_sha256": "8491ff3406afa0dc84769f331f41ad9a87a0fd0d8b4e74478f734bdf43f2ed98",
+      "events": [
+        {
+          "event": "inference",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "request": "5358e6cf-964b-41b3-9f71-863720ebecfb",
+          "camera": "A",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 11571,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 153,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              645,
+              553,
+              798,
+              664
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "inference",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "request": "11783a95-60f6-4ef1-aba5-af402ad2a441",
+          "camera": "B",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 9697,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 153,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              645,
+              553,
+              798,
+              664
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "assignment",
+          "kind": "assignment",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "sender": "A",
+          "to": "A",
+          "target": "WIDE",
+          "action": "HOLD"
+        },
+        {
+          "event": "assignment",
+          "kind": "assignment",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "sender": "A",
+          "to": "B",
+          "target": "MEDIUM",
+          "action": "TIGHTEN_CURRENT"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "sender": "A",
+          "to": "A"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "sender": "B",
+          "to": "A"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "sender": "B",
+          "to": "A",
+          "direction": "received"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "sender": "A",
+          "to": "A"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "sender": "B",
+          "to": "A"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "1f165f96-5d28-43a5-ad27-07b1b177c8cd",
+          "sender": "B",
+          "to": "A",
+          "direction": "received"
+        },
+        {
+          "event": "inference",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "bab26f34-10c2-4050-94a4-5abc973687f5",
+          "request": "d43a0059-1778-4aed-8bcc-b37c154c4d62",
+          "camera": "A",
+          "frame": 1500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 9741,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 170,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              655,
+              553,
+              825,
+              665
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "inference",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "bab26f34-10c2-4050-94a4-5abc973687f5",
+          "request": "b5edfdda-f918-4869-b428-1a875e48857f",
+          "camera": "B",
+          "frame": 1500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 9741,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 170,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              655,
+              553,
+              825,
+              665
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "bab26f34-10c2-4050-94a4-5abc973687f5",
+          "sender": "A",
+          "to": "*",
+          "verified": false
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+          "round": "bab26f34-10c2-4050-94a4-5abc973687f5",
+          "sender": "A",
+          "to": "*",
+          "verified": false,
+          "direction": "received"
+        },
+        {
+          "event": "paired_virtual_playback",
+          "source": "one decoder",
+          "first_position_ms": 0,
+          "last_position_ms": 7837,
+          "displayed_updates": 190
+        }
+      ]
+    },
+    {
+      "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+      "build": "0.2-hybrid",
+      "physical_phones": 1,
+      "virtual_views": 2,
+      "input_origin": "generated Flow video",
+      "source_sha256": "60d091cc8a30f0664fa750264d7e402c80ce98a8c04e51fb5c6b058a90cc93a9",
+      "subject": "light blue ball on the table in front of the baby",
+      "transport": "in process",
+      "branch": "apply suggested framing",
+      "result": "verified",
+      "message": "Fresh views match the assigned framing.",
+      "inputs": [
+        {
+          "stage": "initial",
+          "camera": "A",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 7916,
+          "request": "f7b865fa-423a-436d-99aa-ddfc062b8223",
+          "issue": null
+        },
+        {
+          "stage": "initial",
+          "camera": "B",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 9715,
+          "request": "c5cf3720-484a-49e0-9de6-4ae19ed87a4f",
+          "issue": null
+        },
+        {
+          "stage": "fresh",
+          "camera": "A",
+          "source_pts_us": 1500000,
+          "source_frame_index": 36,
+          "frame_id": 1500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "5b32f3900b7ff1673f46e0208512ce6de86eca757e2829df460904fc2dd284c0",
+          "round": "ba967550-6c52-4384-88d6-798831a3e6ad",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 9782,
+          "request": "4704cf10-223d-445b-a159-a668ba24fe2c",
+          "issue": null
+        },
+        {
+          "stage": "fresh",
+          "camera": "B",
+          "source_pts_us": 1500000,
+          "source_frame_index": 36,
+          "frame_id": 1500000001,
+          "crop_xyxy_px": [
+            928,
+            644,
+            1409,
+            915
+          ],
+          "input_width": 481,
+          "input_height": 271,
+          "input_argb_sha256": "7ec28c510767a14bb4c46812df5cbc5b93c40dbd069164c383ca7d59e206351b",
+          "round": "ba967550-6c52-4384-88d6-798831a3e6ad",
+          "framing": "MEDIUM",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 10157,
+          "request": "dc1a827d-ef34-4231-a919-3779925c7878",
+          "issue": null
+        }
+      ],
+      "tag": "final-adjust",
+      "apk_sha256": "8491ff3406afa0dc84769f331f41ad9a87a0fd0d8b4e74478f734bdf43f2ed98",
+      "events": [
+        {
+          "event": "inference",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "request": "f7b865fa-423a-436d-99aa-ddfc062b8223",
+          "camera": "A",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 7916,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 153,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              645,
+              553,
+              798,
+              664
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "inference",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "request": "c5cf3720-484a-49e0-9de6-4ae19ed87a4f",
+          "camera": "B",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 9715,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 153,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              645,
+              553,
+              798,
+              664
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "assignment",
+          "kind": "assignment",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "sender": "A",
+          "to": "A",
+          "target": "WIDE",
+          "action": "HOLD"
+        },
+        {
+          "event": "assignment",
+          "kind": "assignment",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "sender": "A",
+          "to": "B",
+          "target": "MEDIUM",
+          "action": "TIGHTEN_CURRENT"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "sender": "A",
+          "to": "A"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "sender": "B",
+          "to": "A"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "sender": "B",
+          "to": "A",
+          "direction": "received"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "sender": "A",
+          "to": "A"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "sender": "B",
+          "to": "A"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "a895c0ba-f08b-48fc-8dd3-0edbec12063d",
+          "sender": "B",
+          "to": "A",
+          "direction": "received"
+        },
+        {
+          "event": "inference",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "ba967550-6c52-4384-88d6-798831a3e6ad",
+          "request": "4704cf10-223d-445b-a159-a668ba24fe2c",
+          "camera": "A",
+          "frame": 1500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 9782,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 170,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              655,
+              553,
+              825,
+              665
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "inference",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "ba967550-6c52-4384-88d6-798831a3e6ad",
+          "request": "dc1a827d-ef34-4231-a919-3779925c7878",
+          "camera": "B",
+          "frame": 1500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 10157,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "MEDIUM",
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 642,
+            "issue": null,
+            "derived_framing": "MEDIUM",
+            "box_2d": [
+              273,
+              275,
+              915,
+              675
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "ba967550-6c52-4384-88d6-798831a3e6ad",
+          "sender": "A",
+          "to": "*",
+          "verified": true
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "9b680233-29d0-4b6e-9c9b-ae027e22ad48",
+          "round": "ba967550-6c52-4384-88d6-798831a3e6ad",
+          "sender": "A",
+          "to": "*",
+          "verified": true,
+          "direction": "received"
+        },
+        {
+          "event": "paired_virtual_playback",
+          "source": "one decoder",
+          "first_position_ms": 0,
+          "last_position_ms": 7838,
+          "displayed_updates": 190
+        }
+      ]
+    },
+    {
+      "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+      "build": "0.2-hybrid",
+      "physical_phones": 1,
+      "virtual_views": 2,
+      "input_origin": "generated Flow video",
+      "source_sha256": "60d091cc8a30f0664fa750264d7e402c80ce98a8c04e51fb5c6b058a90cc93a9",
+      "subject": "light blue ball on the table in front of the baby",
+      "transport": "in process",
+      "branch": "apply suggested framing",
+      "result": "verified",
+      "message": "Fresh views match the assigned framing.",
+      "inputs": [
+        {
+          "stage": "initial",
+          "camera": "A",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 9323,
+          "request": "6d48eb28-7c3e-43fe-b12a-8b11815f9f92",
+          "issue": null
+        },
+        {
+          "stage": "initial",
+          "camera": "B",
+          "source_pts_us": 500000,
+          "source_frame_index": 12,
+          "frame_id": 500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "bf7a6f74d75292cb6fbba1c35c1e86b6f46f2e1c580083b97b00a152ca9a16e3",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 9886,
+          "request": "8e7d25e5-8922-4e31-b9e7-ce62a8e560cf",
+          "issue": null
+        },
+        {
+          "stage": "fresh",
+          "camera": "A",
+          "source_pts_us": 1500000,
+          "source_frame_index": 36,
+          "frame_id": 1500000001,
+          "crop_xyxy_px": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "input_width": 640,
+          "input_height": 360,
+          "input_argb_sha256": "5b32f3900b7ff1673f46e0208512ce6de86eca757e2829df460904fc2dd284c0",
+          "round": "a6c7f743-adaf-4efd-a621-faf87b903628",
+          "framing": "WIDE",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 9343,
+          "request": "43381e35-c854-44a6-aeb7-3516279d164f",
+          "issue": null
+        },
+        {
+          "stage": "fresh",
+          "camera": "B",
+          "source_pts_us": 1500000,
+          "source_frame_index": 36,
+          "frame_id": 1500000001,
+          "crop_xyxy_px": [
+            923,
+            655,
+            1379,
+            912
+          ],
+          "input_width": 456,
+          "input_height": 257,
+          "input_argb_sha256": "0e089c5f77dd69652c98597dd234529fc1d4a4590148e0b8da7f2e95a1fc3467",
+          "round": "a6c7f743-adaf-4efd-a621-faf87b903628",
+          "framing": "MEDIUM",
+          "source": "ON_DEVICE",
+          "model": "nano-v4-fast",
+          "sdk_ms": 10014,
+          "request": "dfbe2986-cbb9-4e98-95a4-8ac8c7c25bda",
+          "issue": null
+        }
+      ],
+      "tag": "final-reference",
+      "apk_sha256": "8491ff3406afa0dc84769f331f41ad9a87a0fd0d8b4e74478f734bdf43f2ed98",
+      "events": [
+        {
+          "event": "inference",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "request": "6d48eb28-7c3e-43fe-b12a-8b11815f9f92",
+          "camera": "A",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 9323,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "selection_frame": 1,
+          "selection_method": "drag",
+          "reference_match_error": 2,
+          "reference_x": 593,
+          "reference_y": 744,
+          "image_width": 640,
+          "image_height": 360,
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 145,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              653,
+              545,
+              798,
+              654
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "inference",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "request": "8e7d25e5-8922-4e31-b9e7-ce62a8e560cf",
+          "camera": "B",
+          "frame": 500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 9886,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "selection_frame": 1,
+          "selection_method": "drag",
+          "reference_match_error": 2,
+          "reference_x": 593,
+          "reference_y": 744,
+          "image_width": 640,
+          "image_height": 360,
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 145,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              653,
+              545,
+              798,
+              654
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "assignment",
+          "kind": "assignment",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "sender": "A",
+          "to": "A",
+          "target": "WIDE",
+          "action": "HOLD"
+        },
+        {
+          "event": "assignment",
+          "kind": "assignment",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "sender": "A",
+          "to": "B",
+          "target": "MEDIUM",
+          "action": "TIGHTEN_CURRENT"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "sender": "A",
+          "to": "A"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "sender": "B",
+          "to": "A"
+        },
+        {
+          "event": "accept",
+          "kind": "accept",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "sender": "B",
+          "to": "A",
+          "direction": "received"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "sender": "A",
+          "to": "A"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "sender": "B",
+          "to": "A"
+        },
+        {
+          "event": "ready",
+          "kind": "ready",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "3886755c-67dd-4060-9386-0806b0e3c87f",
+          "sender": "B",
+          "to": "A",
+          "direction": "received"
+        },
+        {
+          "event": "inference",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "a6c7f743-adaf-4efd-a621-faf87b903628",
+          "request": "43381e35-c854-44a6-aeb7-3516279d164f",
+          "camera": "A",
+          "frame": 1500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 9343,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "WIDE",
+          "selection_frame": 1,
+          "selection_method": "drag",
+          "reference_match_error": 2,
+          "reference_x": 593,
+          "reference_y": 744,
+          "image_width": 640,
+          "image_height": 360,
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 143,
+            "issue": null,
+            "derived_framing": "WIDE",
+            "box_2d": [
+              655,
+              543,
+              798,
+              655
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "inference",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "a6c7f743-adaf-4efd-a621-faf87b903628",
+          "request": "dfbe2986-cbb9-4e98-95a4-8ac8c7c25bda",
+          "camera": "B",
+          "frame": 1500000001,
+          "mode": "ONLY_ON_DEVICE",
+          "source": "ON_DEVICE",
+          "sdk_ms": 10014,
+          "local_model": "nano-v4-fast",
+          "result": "valid",
+          "framing": "MEDIUM",
+          "selection_frame": 1,
+          "selection_method": "drag",
+          "reference_match_error": 2,
+          "reference_x": 473,
+          "reference_y": 579,
+          "image_width": 456,
+          "image_height": 257,
+          "grounding": {
+            "revision": "visible-extent-v1",
+            "max_extent": 451,
+            "issue": null,
+            "derived_framing": "MEDIUM",
+            "box_2d": [
+              473,
+              303,
+              924,
+              713
+            ],
+            "target_visible": true,
+            "extent_clear": true,
+            "frame_edge_cut": false
+          }
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "a6c7f743-adaf-4efd-a621-faf87b903628",
+          "sender": "A",
+          "to": "*",
+          "verified": true
+        },
+        {
+          "event": "verdict",
+          "kind": "verdict",
+          "run": "e00773a6-9c84-4c05-bfb9-064fb617a33c",
+          "round": "a6c7f743-adaf-4efd-a621-faf87b903628",
+          "sender": "A",
+          "to": "*",
+          "verified": true,
+          "direction": "received"
+        },
+        {
+          "event": "paired_virtual_playback",
+          "source": "one decoder",
+          "first_position_ms": 0,
+          "last_position_ms": 7831,
+          "displayed_updates": 190
+        }
+      ]
+    }
+  ],
+  "matched_pairs": [
+    {
+      "build": "editorial footage",
+      "keep": "b06681ca-faa6-4963-a77e-e077e80a1d99",
+      "apply": "2a821e82-81b2-4f66-b3c8-23b09e74433f"
+    },
+    {
+      "build": "review signed APK",
+      "keep": "8d0a3afd-fd80-45fa-b19f-78ae808e07d0",
+      "apply": "9b680233-29d0-4b6e-9c9b-ae027e22ad48"
+    }
+  ],
+  "rehearsal_permission_grants": {
+    "CAMERA": false,
+    "BLUETOOTH_SCAN": false,
+    "BLUETOOTH_ADVERTISE": false,
+    "BLUETOOTH_CONNECT": false,
+    "NEARBY_WIFI_DEVICES": false
+  },
+  "real_camera_field": {
+    "field-landscape": {
+      "signed_apk": "8491ff3406afa0dc84769f331f41ad9a87a0fd0d8b4e74478f734bdf43f2ed98",
+      "orientation": [
+        "0",
+        "1"
+      ],
+      "control": "USB navigation of normal UI",
+      "source": "ON_DEVICE",
+      "model": "nano-v4-fast",
+      "sdk_ms": 12083,
+      "outcome": "Your view is wide. Waiting for the other cameras.",
+      "run": "0f7830da-1805-4533-996e-8e841271ba52",
+      "round": "50287293-489a-4936-a5ba-700220f67cc4",
+      "selection_method": "drag",
+      "selection_sensor": 10473168613456,
+      "new_sensor": 10520081944706,
+      "matched_xy_1000": [
+        539,
+        403
+      ],
+      "full_input_dimensions": [
+        606,
+        480
+      ]
+    },
+    "field-portrait": {
+      "signed_apk": "8491ff3406afa0dc84769f331f41ad9a87a0fd0d8b4e74478f734bdf43f2ed98",
+      "orientation": [
+        "0",
+        "0"
+      ],
+      "control": "USB navigation of normal UI",
+      "source": "ON_DEVICE",
+      "model": "nano-v4-fast",
+      "sdk_ms": 13764,
+      "outcome": "Your view is wide. Waiting for the other cameras.",
+      "run": "c456cf31-e8f5-406b-8127-52b1991f59b0",
+      "round": "c1ad2ebe-c4d9-4443-bfad-3394bb0de286",
+      "selection_method": "drag",
+      "selection_sensor": 10397516508873,
+      "new_sensor": 10412076967415,
+      "matched_xy_1000": [
+        601,
+        525
+      ],
+      "full_input_dimensions": [
+        480,
+        406
+      ]
+    }
+  },
+  "real_camera_B_connected": false,
+  "real_camera_team_verification": false,
+  "phone_state_restored": {
+    "rotation": {
+      "accelerometer_rotation": "1",
+      "user_rotation": "3"
+    },
+    "runtime_permissions": {
+      "CAMERA": true,
+      "BLUETOOTH_SCAN": false,
+      "BLUETOOTH_CONNECT": false,
+      "BLUETOOTH_ADVERTISE": false,
+      "NEARBY_WIFI_DEVICES": false
+    },
+    "review_apk_still_installed": true,
+    "temporary_instrumentation_uninstalled": true
+  },
+  "original": {
+    "signed_apk": "8491ff3406afa0dc84769f331f41ad9a87a0fd0d8b4e74478f734bdf43f2ed98",
+    "control": "USB navigation of normal UI",
+    "run_prefix": "0f7830da",
+    "camera": "A",
+    "duration_ms": 6564,
+    "frames": 197,
+    "bytes": 7360944,
+    "sha256": "676ae1e4687001c984725d9492bdf29e03c7e4075c69c06044a5b55e5fd460d5",
+    "full_decode": true
+  },
+  "normal_samples": {
+    "device": "SM-S938N",
+    "apk_sha256": "8491ff3406afa0dc84769f331f41ad9a87a0fd0d8b4e74478f734bdf43f2ed98",
+    "control": "Same-signer update. USB navigation of production sample buttons. Generated orange ball for public data.",
+    "tests": {
+      "appcheck": "App Check verified for this installation.",
+      "local": "WIDE  ·  ON DEVICE  ·  15.4 s\nOrange circle in the center\nnano-v4-fast",
+      "cloud": "WIDE  ·  IN CLOUD  ·  2.3 s\norange ball with yellow circle\ngemini-3.5-flash-lite",
+      "fallback": "WIDE  ·  IN CLOUD  ·  2.8 s\norange sphere with highlight spot\ngemini-3.5-flash-lite"
+    }
+  },
+  "android_role_checks": {
+    "apk": "8491ff3406afa0dc84769f331f41ad9a87a0fd0d8b4e74478f734bdf43f2ed98",
+    "device": "SM-S938N",
+    "physical_phones": 1,
+    "simulated_peers": 2,
+    "result": "INSTRUMENTATION_RESULT: checks=PASS: opt-out metadata, opt-in JPEG, sender/frame binding, no journal pixels, revoke, clear at fresh round, accepted roles, verified round, disconnect, stale packet, bounded decoding\nINSTRUMENTATION_CODE: -1\n"
+  },
+  "earlier_camera_attempts": {
+    "named_plastic_bottle_wrong_detail": {
+      "signed_apk": "f1e51cd625afc42dfdb85c39102b5f6921041f131f38c78c509d4a8bfbb839c4",
+      "orientation": [
+        "0",
+        "0"
+      ],
+      "control": "USB navigation of normal UI",
+      "source": "ON_DEVICE",
+      "model": "nano-v4-fast",
+      "sdk_ms": 13759,
+      "outcome": "The model's box missed the selected detail. Select the subject again on this camera.",
+      "run": "87fb6d41-4251-4113-a8b5-c3145ee0b1bb",
+      "round": "b8a4ae44-3467-4588-8e20-076d7cbb0b06",
+      "selection_method": "tap detail",
+      "selection_sensor": 8185314357623,
+      "new_sensor": 8303530621165,
+      "matched_xy_1000": [
+        551,
+        503
+      ],
+      "full_input_dimensions": [
+        480,
+        406
+      ]
+    },
+    "zoomed_lotion_drag": {
+      "signed_apk": "f1e51cd625afc42dfdb85c39102b5f6921041f131f38c78c509d4a8bfbb839c4",
+      "orientation": [
+        "0",
+        "0"
+      ],
+      "control": "USB navigation of normal UI",
+      "source": "ON_DEVICE",
+      "model": "nano-v4-fast",
+      "sdk_ms": 12756,
+      "outcome": "Your view is wide.",
+      "run": "b7eebb4e-ee50-442f-9491-da4c1051b8e6",
+      "round": "4dbcf346-a460-49d0-8348-5e77a55c5378",
+      "selection_method": "drag",
+      "selection_sensor": 8792055665123,
+      "new_sensor": 8806782719498,
+      "matched_xy_1000": [
+        601,
+        533
+      ],
+      "full_input_dimensions": [
+        480,
+        406
+      ]
+    }
+  },
+  "local_review_film": {
+    "sha256": "46b8afbbbb470445507a3172b90a714429ce68bafb13d956ef1df78a248235d6",
+    "bytes": 4935814,
+    "frames": 2298,
+    "dimensions": [
+      1920,
+      1080
+    ],
+    "seconds": 95.75,
+    "english_vtt_cues": 15,
+    "full_video_audio_decode": true,
+    "motion_intervals_seconds": [
+      68.1,
+      69.1,
+      70.1,
+      71.1,
+      72.1
+    ],
+    "changed_pixel_fraction": {
+      "A": [
+        0.1129,
+        0.2184,
+        0.2672,
+        0.2593
+      ],
+      "B": [
+        0.1673,
+        0.3519,
+        0.3388,
+        0.3318
+      ]
+    },
+    "capture_build": "8491ff3406afa0dc84769f331f41ad9a87a0fd0d8b4e74478f734bdf43f2ed98",
+    "public": false
+  },
+  "remaining": [
+    "Same-build S25 Ultra + Fold8 over Nearby",
+    "Two physical source frames and two same-run originals",
+    "Unassisted two-phone completion and comparison with verbal assignment"
+  ]
+}

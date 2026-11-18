@@ -1,5 +1,7 @@
 # Galaxy S25 Ultra field verification
 
+This page records the distributed **0.1** build. The **0.2** study covers the actual camera photo selector, the controlled rehearsal, playback, the physical solo check and the in-process crew tests. [Version 0.2 measurements](crew-ui.md) · [Version 0.2 run data](crew-ui.json)
+
 On November 19, 2026 in Korea, one Samsung Galaxy S25 Ultra (SM-S938N, Android 17, API 37) ran the Android application. Firebase reported **ON_DEVICE** with **nano-v4-fast** for a live scene and an offline generated fixture. On the same installation, a separate request in **PREFER_ON_DEVICE** reached the cloud when its selected stable local model was unavailable. The production-signed APK then passed fresh-install Play Integrity and a protected cloud request.
 
 The source revision is `3e6edc1014fc73b803df851e3bfab1489bc898c8`. The instrumented development APK SHA-256 is `c42c5a92bd4b775e1232256c378905bea8606f27fb3f77d385efe4d53c5577f2`. The signed release APK SHA-256 is `894103dee59343f92f7942e97e60829692ffab8903e544d30726b1a9ceb24579`. Results, sensor frame identifiers and source/model receipts are in the [deidentified run data](device.json).
