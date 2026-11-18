@@ -1,0 +1,36 @@
+# CrewCam at #BuildHybridAI 2026
+
+**Android entry, on the Windows PC.** The lead validation phone is the Samsung Galaxy S25 Ultra (SM-S938N). The second target is the Galaxy Z Fold8 (SM-F971N). A parent filming a birthday wants to know before the candles are blown out whether one camera has the surroundings and another has the subject. A second recording adds little when both people have made the same framing mistake.
+
+## Rules and evidence
+
+The submission window runs from Nov 11 at 13:30 PST to Nov 30 at 14:00 PST, **Dec 1 at 07:00 in Korea**. Internal delivery target is Nov 30 at 21:00 KST. Keep the demo available through Dec 17 at 07:00 KST. The rules and schedule list different judging start times, so retain access throughout the interval. Eligible existing work needs a material update and a disclosure of inherited code. Check the entrant's own eligibility, rights and any employment restrictions at finalization. [Rules](https://firebasehybridaihackathon.devpost.com/rules) · [Schedule](https://firebasehybridaihackathon.devpost.com/details/dates)
+
+Submit a free working test build, English description and instructions, a public GitHub/GitLab repository with a detectable open-source license, and a public YouTube demonstration with English audio or subtitles, within three minutes. Judges can evaluate from the materials alone. The code must call Firebase AI Logic at runtime. Android requires Gemini Nano 4 and Firebase App Check. Remote Config and other Firebase products are optional. A single Android app can compete for Best Android and the grand prize. [Official requirements](https://firebasehybridaihackathon.devpost.com/) · [Rules](https://firebasehybridaihackathon.devpost.com/rules)
+
+| Judging criterion (equal weight after viability review) | Visible evidence | Review question |
+| --- | --- | --- |
+| Technical implementation | Actual local, cloud and automatic fallback receipts tied to the APK, then a live-frame request in the same workflow | Did the SDK report each source? Did the previously accepted action pass on a newly captured frame? |
+| Design | English camera screen, scoped permission requests, one camera's actionable instruction, explicit decline/retry | Can a new operator finish a take using both phones without PC control? |
+| Potential impact | A blinded side-by-side review of actual originals against unassisted and verbally assigned camera roles | How often did the pair retain both intended views, and how much preparation time did it cost? |
+| Quality of idea | The pair initially overlook a duplicate angle. One person moves. The software checks again before the moment. | Does the specific birthday use case show a benefit beyond verbally agreeing on roles? |
+
+## Product and repository decisions
+
+1. Use a standalone source repository and Android application ID. The original CrewCam GitHub project is private, contains historical media and has no detected root license. Take a small audited subset from the 055 code. Keep its chronology in the attribution notes. Keep registrations, signing material, debug-device tokens, camera originals, build caches and unedited UI captures outside public Git history.
+2. Each phone receives the shared subject and checks **its own** reduced live frame. The leader receives a framing observation with camera, sensor frame, source and time. Nearby carries metadata. Only the operator holding each camera can authorize cloud processing for that camera.
+3. The default is ONLY_ON_DEVICE. Opt-in routing uses PREFER_ON_DEVICE with a named cloud model. Collect the response's inferenceSource for each request. A single generated fixture supports a controlled cloud check. A two-image fixture deliberately exceeds the Android local single-image capability and exercises automatic fallback. Record observed outcomes separately. Model availability depends on the phone, OS, runtime and installed model. [Firebase Android](https://firebase.google.com/docs/ai-logic/hybrid/android/get-started) · [Inference configuration](https://firebase.google.com/docs/ai-logic/hybrid/android/configuration-options) · [ML Kit supported devices](https://developers.google.com/ml-kit/genai)
+4. Preserve the original target bounds and uncertainty bands, allocate complementary angles and ask each person to accept or decline. Fresh verification requires newer frames from all participants under the current round identifier. Expose individual originals and their save results. The topology limit is eight. A policy test with eight slots contributes no physical capture evidence.
+5. Keep the project on Spark. The debug build uses per-install App Check and the release build uses Play Integrity. For judging, validate a legitimately signed distribution build on a clean device, including App Check, local model preparation, cloud access and cold start. Keep console debug secrets and signing keys out of the public project. The test phone's successful attestation does not validate an arbitrary judge's installation. [Play Integrity setup](https://firebase.google.com/docs/app-check/android/play-integrity-provider) · [Debug provider](https://firebase.google.com/docs/app-check/android/debug-provider)
+
+## Execution and review schedule in Korea
+
+| Dates | Work | Release evidence |
+| --- | --- | --- |
+| Nov 19–20 | S25 Ultra SDK integration, configuration, real request source, local model name, availability and downloads. Measure a small public staged fixture. | APK SHA, OS, SDK/source, per-request times, cloud App Check and failure records |
+| Nov 21–23 | Pair S25 Ultra and Fold8 over Nearby. Run with the same subject, overlapping angles, one actual reposition, fresh verification and simultaneous originals. Repeat through normal UI. | Paired model IDs, identical APK, run and both sensor timelines. Separate USB-produced and unaided operation |
+| Nov 24–26 | Compare free filming, verbal wide/close assignment and CrewCam; rotate order. Include duplicate, already-diverse and occluded scenes. | Matched capture outcomes, setup time, missed angles, unwanted moves, help requests and retries |
+| Nov 26–27 | Reject, disconnect, missing model, invalid output, airplane/offline local (Nearby radio still available), cloud refusal, denied camera permission, timeout and interrupted recording. | Observed failures, recovery, absence of stale success, finalized files and complete decode |
+| Nov 28–30 | Build from a clean source clone, test judge installation, record the English demonstration, inspect every cut and caption, review rights and publish the approved repository/video. | Build and release hashes, verified English video under 180 seconds, public playback, free access and Devpost submission receipt |
+
+Internal targets: five consecutive live two-phone completions, zero false verifications in the planned negative trials, and at least one genuinely improved duplicate pair. Preserve all attempts and denominators. Final results require actual measurements. A single-device fallback demonstration or a filmed replay cannot satisfy the two-camera movement requirement.
